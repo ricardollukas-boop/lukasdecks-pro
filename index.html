@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1f2933">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>LukasDecks Pro v1.0 Final</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#16202a;--muted:#6b7785;--accent:#d97706;--dark:#1f2933;--line:#e5e7eb;--good:#15803d;--bad:#b91c1c}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--dark);color:white;padding:15px 18px;position:sticky;top:0;z-index:5}.brand{max-width:1120px;margin:auto;display:flex;justify-content:space-between;align-items:center}.badge{background:var(--accent);padding:5px 9px;border-radius:999px;font-size:12px}
+nav{background:#111827;color:white;position:sticky;top:58px;z-index:4}.tabs{max-width:1120px;margin:auto;display:flex;overflow:auto}.tab{padding:13px 15px;white-space:nowrap;cursor:pointer;border-bottom:3px solid transparent}.tab.active{border-color:var(--accent);background:#1f2937}
+main{max-width:1120px;margin:22px auto;padding:0 16px 45px}.hidden{display:none!important}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 8px 24px rgba(31,41,51,.05)}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+h1{font-size:25px;margin:0 0 4px}h2{font-size:18px;margin:0 0 16px}.sub,.small{color:var(--muted)}.small{font-size:12px}.stat b{font-size:23px;display:block}.stat span{font-size:13px;color:var(--muted)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cfd6dd;border-radius:10px;font:inherit;background:white}textarea{min-height:76px}
+.result{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.result span:first-child{color:#27313c}.total{font-size:28px;font-weight:800;color:var(--accent)}.good{color:var(--good)}.bad{color:var(--bad)}
+button{border:0;border-radius:11px;padding:12px 14px;font-weight:750;cursor:pointer;margin-top:10px}.primary{background:var(--accent);color:white}.secondary{background:#eef1f4;color:var(--ink)}.danger{background:#fee2e2;color:#991b1b}.btnrow{display:flex;gap:9px;flex-wrap:wrap}.btnrow button{flex:1;min-width:130px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line);font-size:14px}th{background:#f8fafc}.pill{font-size:12px;background:#eef1f4;border-radius:999px;padding:4px 8px}
+.invoice-preview{max-width:760px;margin:auto;background:white;padding:30px;border:1px solid var(--line)}.invoice-head{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid var(--dark);padding-bottom:18px}.invoice-head h2{font-size:25px;margin:0}.invoice-meta{text-align:right}.invoice-total{font-size:26px;font-weight:800;color:var(--accent)}
+.note{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px;margin-top:12px;color:#7c2d12}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.fields{grid-template-columns:1fr}.full{grid-column:auto}.invoice-head{display:block}.invoice-meta{text-align:left;margin-top:15px}th:nth-child(3),td:nth-child(3){display:none}}
+.invoice-preview table{margin-top:10px}.invoice-preview th{font-size:13px;text-transform:uppercase;letter-spacing:.04em}.invoice-preview td{font-size:15px}.invoice-preview .result{font-size:16px}
+@media print{header,nav,.no-print{display:none!important}body{background:white}main{margin:0;padding:0}.invoice-preview{border:0;max-width:none}.page{display:none!important}#invoicePage{display:block!important}}
+</style>
+</head>
+<body>
+<header><div class="brand"><b>LukasDecks Pro</b><span class="badge">v1.0 Final</span></div></header>
+<nav><div class="tabs">
+<div class="tab active" onclick="showPage('dashboard',this)">Dashboard</div><div class="tab" onclick="showPage('estimate',this)">New Estimate</div><div class="tab" onclick="showPage('projects',this)">Projects</div><div class="tab" onclick="showPage('invoice',this)">Invoice</div><div class="tab" onclick="showPage('settings',this)">Settings</div>
+</div></nav>
+<main>
+<section id="dashboardPage" class="page"><h1>Dashboard</h1><p class="sub">Summary of your projects.</p><div class="stats"><div class="card stat"><span>Projects</span><b id="dProjects">0</b></div><div class="card stat"><span>Total Sold</span><b id="dSales">$0</b></div><div class="card stat"><span>Remaining After Helpers</span><b id="dProfit">$0</b></div><div class="card stat"><span>Average/Project</span><b id="dAvg">$0</b></div></div><div class="card"><h2>Recent Projects</h2><div id="recent"></div></div></section>
+
+<section id="estimatePage" class="page hidden"><h1>New Estimate</h1><p class="sub">Price, labor, and remaining amount after helpers.</p><div class="grid"><div class="card"><div class="fields">
+<div class="full"><label>Project</label><input id="project" placeholder="Ex: Deck Bridgewater" required></div><div><label>Customer</label><input id="client" placeholder="Customer name" required></div><div><label>Status</label><select id="status"><option>Estimate</option><option>Approved</option><option>In Progress</option><option>Completed</option><option>Paid</option></select></div>
+<div><label>Width (ft)</label><input id="width" type="number" value="21" step="0.01"></div><div><label>Length (ft)</label><input id="length" type="number" value="16" step="0.01"></div>
+<div><label>Frame ($/sf)</label><input id="frameRate" type="number" step="0.01"></div><div><label>Decking ($/sf)</label><input id="deckRate" type="number" step="0.01"></div>
+<div><label>Fascia (LF)</label><input id="fascia" type="number" value="56" step="0.01"></div><div><label>Fascia ($/LF)</label><input id="fasciaRate" type="number" step="0.01"></div>
+<div><label>Railing (LF)</label><input id="railing" type="number" value="32" step="0.01"></div><div><label>Railing ($/LF)</label><input id="railingRate" type="number" step="0.01"></div>
+<div><label>Steps</label><input id="steps" type="number" value="5" step="1"></div><div><label>Price/step</label><input id="stepRate" type="number" step="0.01"></div>
+<div><label>Footings</label><input id="footings" type="number" value="6" step="1"></div><div><label>Price/footing</label><input id="footingRate" type="number" step="0.01"></div>
+<div><label>Days</label><input id="days" type="number" value="4" step="0.5"></div><div><label>Hours/day</label><input id="hoursDay" type="number" value="10" step="0.5"></div>
+<div><label>Helper 1 ($/h)</label><input id="helper1" type="number" value="23" step="0.01"></div><div><label>Helper 2 ($/h)</label><input id="helper2" type="number" value="25" step="0.01"></div><div><label>Helper 3 ($/h)</label><input id="helper3" type="number" value="0" step="0.01"></div>
+<div class="full"><label>Invoice Description</label><textarea id="notes" placeholder="Labor for deck construction..."></textarea></div></div>
+<div class="btnrow"><button class="primary" onclick="saveProject()">Save Project</button><button class="secondary" onclick="resetForm()">Clear</button></div><p id="saveMsg" class="small"></p></div>
+<aside class="card"><h2>Summary</h2><div class="result"><span>Area</span><b id="areaOut">0 sf</b></div><div class="result"><span>Frame</span><b id="fTotal">$0</b></div><div class="result"><span>Decking</span><b id="deTotal">$0</b></div><div class="result"><span>Fascia</span><b id="faTotal">$0</b></div><div class="result"><span>Railing</span><b id="rTotal">$0</b></div><div class="result"><span>Stairs</span><b id="sTotal">$0</b></div><div class="result"><span>Footings</span><b id="foTotal">$0</b></div><p class="small">Estimated Total</p><div id="grand" class="total">$0</div><hr><div class="result"><span>Helper Cost</span><b id="labor">$0</b></div><div class="result"><span>Remaining After Helpers</span><b id="profit">$0</b></div><div class="result"><span>Your Gross Hourly Earnings</span><b id="hourly">$0/h</b></div><div class="result"><span>Status</span><b id="hourlyStatus">—</b></div><div class="result"><span>Margin After Helpers</span><b id="margin">0%</b></div><div class="note small">Note: this “remaining amount” does not yet subtract gas, tools, insurance, taxes, materials purchased by you, or other costs.</div></aside></div></section>
+
+<section id="projectsPage" class="page hidden"><h1>Projects</h1><p class="sub">Select a project to generate an invoice.</p><div class="card"><div class="no-print btnrow"><button class="secondary" onclick="exportCSV()">Export CSV</button><button class="danger" onclick="clearAll()">Delete All</button></div><div id="projectTable"></div></div></section>
+
+<section id="invoicePage" class="page hidden"><h1 class="no-print">Invoice</h1><p class="sub no-print">Choose a saved project, enter payment information, and generate a professional invoice.</p><div class="card no-print"><label>Saved Project</label><select id="invoiceProject" onchange="loadInvoiceProject()"></select>
+<div class="fields">
+<div><label>Customer Name</label><input id="invoiceCustomerName" placeholder="Customer name" oninput="renderInvoice()"></div>
+<div><label>Project Name</label><input id="invoiceProjectName" placeholder="Project name" oninput="renderInvoice()"></div>
+<div><label>Amount Paid ($)</label><input id="amountPaid" type="number" value="0" oninput="renderInvoice()"></div>
+<div><label>Invoice #</label><input id="invoiceNumber" value="1001" oninput="renderInvoice()"></div>
+</div><button class="primary" onclick="window.print()">Generate Invoice PDF</button></div><br>
+<div class="invoice-preview" id="invoicePreview"><div class="invoice-head"><div><h2 id="invCompany">LukasDecks Custom Builders</h2><div id="invContact" class="small"></div></div><div class="invoice-meta"><b style="font-size:24px;letter-spacing:1px;">INVOICE</b><div id="invNum"></div><div id="invDate"></div></div></div><br><div><b>Bill To:</b><div id="invClient">—</div><br><b>Project:</b><div id="invProject">—</div></div><br><table><thead><tr><th>Service Description</th><th>Amount</th></tr></thead><tbody><tr><td id="invDescription">—</td><td id="invAmount">$0</td></tr></tbody></table><br><div class="result"><span>Invoice Total</span><b id="invTotal">$0</b></div><div class="result"><span>Amount Paid</span><b id="invPaid">$0</b></div><div class="result"><span>Balance Due</span><span id="invBalance" class="invoice-total">$0</span></div><br><p class="small">Thank you for your business.</p></div></section>
+
+<section id="settingsPage" class="page hidden"><h1>Settings</h1><p class="sub">Company and default prices.</p><div class="card"><div class="fields"><div class="full"><label>Company Name</label><input id="setCompany" value="LukasDecks Custom Builders"></div><div><label>Email</label><input id="setEmail" value="contact@lukasdecks.com"></div><div><label>Phone</label><input id="setPhone" placeholder="Phone"></div><div><label>Frame $/sf</label><input id="setFrame" type="number" value="5" step="0.01"></div><div><label>Decking $/sf</label><input id="setDeck" type="number" value="5.5" step="0.01"></div><div><label>Fascia $/LF</label><input id="setFascia" type="number" value="3" step="0.01"></div><div><label>Railing $/LF</label><input id="setRailing" type="number" value="80" step="0.01"></div><div><label>Step $</label><input id="setStep" type="number" value="100" step="0.01"></div><div><label>Footing $</label><input id="setFooting" type="number" value="100" step="0.01"></div></div><button class="primary" onclick="saveSettings()">Save Settings</button><p id="settingsMsg" class="small"></p></div></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const n=id=>{const el=$(id); if(!el) return 0; const val=String(el.value||"").replace(",","."); return Number(val)||0;}
+const money=v=>Number(v||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
+const getP=()=>JSON.parse(localStorage.getItem("ld_projects_v09")||"[]"), setP=x=>localStorage.setItem("ld_projects_v09",JSON.stringify(x));
+const getS=()=>JSON.parse(localStorage.getItem("ld_settings_v09")||'{"company":"LukasDecks Custom Builders","email":"contact@lukasdecks.com","phone":"","frame":5,"deck":5.5,"fascia":3,"railing":80,"step":100,"footing":100}');
+function showPage(p,el){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$(p+"Page").classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderAll()}
+function loadSettings(){let s=getS();setCompany.value=s.company;setEmail.value=s.email;setPhone.value=s.phone;setFrame.value=s.frame;setDeck.value=s.deck;setFascia.value=s.fascia;setRailing.value=s.railing;setStep.value=s.step;setFooting.value=s.footing;frameRate.value=s.frame;deckRate.value=s.deck;fasciaRate.value=s.fascia;railingRate.value=s.railing;stepRate.value=s.step;footingRate.value=s.footing}
+function calc(){
+  const deckArea=n("width")*n("length");
+  const frame=deckArea*n("frameRate"), deck=deckArea*n("deckRate"), fas=n("fascia")*n("fasciaRate"), rail=n("railing")*n("railingRate"), st=n("steps")*n("stepRate"), foot=n("footings")*n("footingRate");
+  const total=frame+deck+fas+rail+st+foot;
+  const lab=(n("helper1")+n("helper2")+n("helper3"))*n("hoursDay")*n("days");
+  const prof=total-lab;
+  const ownerHours=n("hoursDay")*n("days");
+  const hr=ownerHours?prof/ownerHours:0;
+  const marginPct=total?prof/total*100:0;
+  areaOut.textContent=deckArea.toFixed(2)+" sf";
+  [["fTotal",frame],["deTotal",deck],["faTotal",fas],["rTotal",rail],["sTotal",st],["foTotal",foot],["labor",lab]].forEach(a=>$(a[0]).textContent=money(a[1]));
+  grand.textContent=money(total); profit.textContent=money(prof); hourly.textContent=money(hr)+"/h"; margin.textContent=marginPct.toFixed(1)+"%";
+  profit.className=prof>=0?"good":"bad";
+  let statusText="🔴 Low";
+  let statusClass="bad";
+  if(hr>=45){statusText="🟢 Good"; statusClass="good";}
+  else if(hr>=35){statusText="🟡 Acceptable"; statusClass="";}
+  hourly.className=statusClass;
+  hourlyStatus.textContent=statusText;
+  hourlyStatus.className=statusClass;
+  margin.className=marginPct>=30?"good":"bad";
+  return{id:Date.now(),project:(project.value||"Deck Project").trim(),client:(client.value||"Customer").trim(),status:status.value,area:deckArea,total,labor:lab,profit:prof,hourly:hr,margin:marginPct,notes:notes.value,date:new Date().toLocaleDateString()}
+}
+document.querySelectorAll("#estimatePage input,#estimatePage select,#estimatePage textarea").forEach(x=>x.addEventListener("input",calc));
+function saveProject(){let a=getP();a.unshift(calc());setP(a);saveMsg.textContent="Project saved successfully.";renderAll()}
+function resetForm(){["project","client","notes"].forEach(x=>$(x).value="");calc()}
+function renderProjects(){let a=getP();projectTable.innerHTML=a.length?`<table><thead><tr><th>Project</th><th>Total</th><th>Remaining</th><th>Action</th></tr></thead><tbody>${a.map(p=>`<tr><td><b>${p.project}</b><br><span class="small">${p.client} • ${p.status} • ${Number(p.area||0).toFixed(2)} sf</span></td><td>${money(p.total)}</td><td class="${p.profit>=0?'good':'bad'}">${money(p.profit)}<br><span class="small">${money(p.hourly)}/h</span></td><td><button class="danger" onclick="delP(${p.id})">Delete</button></td></tr>`).join("")}</tbody></table>`:"<p class='small'>No saved projects.</p>"}
+function renderDashboard(){let a=getP(),sales=a.reduce((s,p)=>s+p.total,0),prof=a.reduce((s,p)=>s+p.profit,0);dProjects.textContent=a.length;dSales.textContent=money(sales);dProfit.textContent=money(prof);dAvg.textContent=money(a.length?sales/a.length:0);recent.innerHTML=a.slice(0,5).map(p=>`<div class="result"><span><b>${p.project}</b><br><span class="small">${p.client||"No customer"} • ${Number(p.area||0).toFixed(2)} sf</span></span><b>${money(p.total)}</b></div>`).join("")||"<p class='small'>No saved projects.</p>"}
+function renderInvoiceSelect(){
+  let a=getP(),cur=invoiceProject.value;
+  invoiceProject.innerHTML=a.map(p=>`<option value="${p.id}">${p.project||"Untitled Project"} — ${p.client||"No customer"}</option>`).join("")||"<option value=''>No saved project</option>";
+  if(cur&&a.some(p=>String(p.id)===cur)) invoiceProject.value=cur;
+  loadInvoiceProject(false);
+}
+function loadInvoiceProject(shouldRender=true){
+  let p=getP().find(x=>String(x.id)===invoiceProject.value);
+  if(p){
+    invoiceCustomerName.value=p.client||"";
+    invoiceProjectName.value=p.project||"";
+  }
+  if(shouldRender) renderInvoice();
+  else renderInvoice();
+}
+function renderInvoice(){
+  let p=getP().find(x=>String(x.id)===invoiceProject.value),s=getS();
+  invCompany.textContent=s.company;
+  invContact.textContent=[s.email,s.phone].filter(Boolean).join(" • ");
+  invNum.textContent="Invoice #"+invoiceNumber.value;
+  invDate.textContent=new Date().toLocaleDateString();
+  let customer=(invoiceCustomerName&&invoiceCustomerName.value.trim()) || (p&&p.client) || "Customer";
+  let projectName=(invoiceProjectName&&invoiceProjectName.value.trim()) || (p&&p.project) || "Project";
+  if(!p){
+    invClient.textContent=customer;
+    invProject.textContent=projectName;
+    invDescription.textContent="Labor / deck construction";
+    invAmount.textContent=invTotal.textContent=invBalance.textContent="$0.00";
+    invPaid.textContent=money(n("amountPaid"));
+    return;
+  }
+  let paid=n("amountPaid");
+  invClient.textContent=customer;
+  invProject.textContent=projectName;
+  invDescription.textContent=p.notes||("Labor / deck construction — "+projectName+" — "+Number(p.area||0).toFixed(2)+" sf");
+  invAmount.textContent=money(p.total);
+  invTotal.textContent=money(p.total);
+  invPaid.textContent=money(paid);
+  invBalance.textContent=money(Math.max(0,p.total-paid));
+}
+function saveSettings(){let s={company:setCompany.value,email:setEmail.value,phone:setPhone.value,frame:n("setFrame"),deck:n("setDeck"),fascia:n("setFascia"),railing:n("setRailing"),step:n("setStep"),footing:n("setFooting")};localStorage.setItem("ld_settings_v09",JSON.stringify(s));loadSettings();settingsMsg.textContent="Settings saved.";renderAll()}
+function delP(id){setP(getP().filter(p=>p.id!==id));renderAll()} function clearAll(){if(confirm("Delete All os projetos?")){setP([]);renderAll()}}
+function exportCSV(){let a=getP();if(!a.length)return alert("No project.");let rows=[["Project","Client","Status","Area","Total","Labor","Remainder","Hourly","Margin","Date"],...a.map(p=>[p.project,p.client,p.status,p.area,p.total,p.labor,p.profit,p.hourly,p.margin,p.date])],csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n"),link=document.createElement("a");link.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));link.download="lukasdecks_projects.csv";link.click()}
+function renderAll(){renderDashboard();renderProjects();renderInvoiceSelect();calc()}
+loadSettings();renderAll();
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js?v=10")); }
+</script>
+</body></html>
