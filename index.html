@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1f2933">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>LukasDecks Pro v1.0 Final</title>
+<title>LukasDecks Pro v0.5</title>
 <style>
 :root{--bg:#f4f6f8;--card:#fff;--ink:#16202a;--muted:#6b7785;--accent:#d97706;--dark:#1f2933;--line:#e5e7eb;--good:#15803d;--bad:#b91c1c}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
@@ -26,11 +26,18 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 </style>
 </head>
 <body>
-<header><div class="brand"><b>LukasDecks Pro</b><span class="badge">v1.0 Final</span></div></header>
+<header><div class="brand"><b>LukasDecks Pro</b><span class="badge">v1.1 Company Setup</span></div></header>
 <nav><div class="tabs">
-<div class="tab active" onclick="showPage('dashboard',this)">Dashboard</div><div class="tab" onclick="showPage('estimate',this)">New Estimate</div><div class="tab" onclick="showPage('projects',this)">Projects</div><div class="tab" onclick="showPage('invoice',this)">Invoice</div><div class="tab" onclick="showPage('settings',this)">Settings</div>
+<div class="tab active" onclick="showPage('dashboard',this)">Dashboard</div><div class="tab" onclick="showPage('estimate',this)">New Estimate</div><div class="tab" onclick="showPage('projects',this)">Projects</div><div class="tab" onclick="showPage('invoice',this)">Invoice</div><div class="tab" onclick="showPage('settings',this)">Company</div>
 </div></nav>
 <main>
+<section id="companySetup" class="card no-print" style="background:#fff7ed;border-color:#fed7aa">
+<h2>Set up your company first</h2>
+<p class="sub">Enter your own company name before creating invoices.</p>
+<div class="fields"><div class="full"><label>Company Name</label><input id="setupCompany" placeholder="Your company name"></div><div><label>Email</label><input id="setupEmail" placeholder="Email"></div><div><label>Phone</label><input id="setupPhone" placeholder="Phone"></div></div>
+<button class="primary" onclick="saveCompanyFromSetup()">Save Company</button>
+</section>
+
 <section id="dashboardPage" class="page"><h1>Dashboard</h1><p class="sub">Summary of your projects.</p><div class="stats"><div class="card stat"><span>Projects</span><b id="dProjects">0</b></div><div class="card stat"><span>Total Sold</span><b id="dSales">$0</b></div><div class="card stat"><span>Remaining After Helpers</span><b id="dProfit">$0</b></div><div class="card stat"><span>Average/Project</span><b id="dAvg">$0</b></div></div><div class="card"><h2>Recent Projects</h2><div id="recent"></div></div></section>
 
 <section id="estimatePage" class="page hidden"><h1>New Estimate</h1><p class="sub">Price, labor, and remaining amount after helpers.</p><div class="grid"><div class="card"><div class="fields">
@@ -58,14 +65,14 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 </div><button class="primary" onclick="window.print()">Generate Invoice PDF</button></div><br>
 <div class="invoice-preview" id="invoicePreview"><div class="invoice-head"><div><h2 id="invCompany">LukasDecks Custom Builders</h2><div id="invContact" class="small"></div></div><div class="invoice-meta"><b style="font-size:24px;letter-spacing:1px;">INVOICE</b><div id="invNum"></div><div id="invDate"></div></div></div><br><div><b>Bill To:</b><div id="invClient">—</div><br><b>Project:</b><div id="invProject">—</div></div><br><table><thead><tr><th>Service Description</th><th>Amount</th></tr></thead><tbody><tr><td id="invDescription">—</td><td id="invAmount">$0</td></tr></tbody></table><br><div class="result"><span>Invoice Total</span><b id="invTotal">$0</b></div><div class="result"><span>Amount Paid</span><b id="invPaid">$0</b></div><div class="result"><span>Balance Due</span><span id="invBalance" class="invoice-total">$0</span></div><br><p class="small">Thank you for your business.</p></div></section>
 
-<section id="settingsPage" class="page hidden"><h1>Settings</h1><p class="sub">Company and default prices.</p><div class="card"><div class="fields"><div class="full"><label>Company Name</label><input id="setCompany" value="LukasDecks Custom Builders"></div><div><label>Email</label><input id="setEmail" value="contact@lukasdecks.com"></div><div><label>Phone</label><input id="setPhone" placeholder="Phone"></div><div><label>Frame $/sf</label><input id="setFrame" type="number" value="5" step="0.01"></div><div><label>Decking $/sf</label><input id="setDeck" type="number" value="5.5" step="0.01"></div><div><label>Fascia $/LF</label><input id="setFascia" type="number" value="3" step="0.01"></div><div><label>Railing $/LF</label><input id="setRailing" type="number" value="80" step="0.01"></div><div><label>Step $</label><input id="setStep" type="number" value="100" step="0.01"></div><div><label>Footing $</label><input id="setFooting" type="number" value="100" step="0.01"></div></div><button class="primary" onclick="saveSettings()">Save Settings</button><p id="settingsMsg" class="small"></p></div></section>
+<section id="settingsPage" class="page hidden"><h1>Company Setup</h1><p class="sub">This information appears on invoices. Each user should enter their own company name.</p><div class="card"><div class="fields"><div class="full"><label>Company Name</label><input id="setCompany" placeholder="Your company name"></div><div><label>Email</label><input id="setEmail" placeholder="Email"></div><div><label>Phone</label><input id="setPhone" placeholder="Phone"></div><div><label>Frame $/sf</label><input id="setFrame" type="number" value="5" step="0.01"></div><div><label>Decking $/sf</label><input id="setDeck" type="number" value="5.5" step="0.01"></div><div><label>Fascia $/LF</label><input id="setFascia" type="number" value="3" step="0.01"></div><div><label>Railing $/LF</label><input id="setRailing" type="number" value="80" step="0.01"></div><div><label>Step $</label><input id="setStep" type="number" value="100" step="0.01"></div><div><label>Footing $</label><input id="setFooting" type="number" value="100" step="0.01"></div></div><button class="primary" onclick="saveSettings()">Save Settings</button><p id="settingsMsg" class="small"></p></div></section>
 </main>
 <script>
 const $=id=>document.getElementById(id);
 const n=id=>{const el=$(id); if(!el) return 0; const val=String(el.value||"").replace(",","."); return Number(val)||0;}
 const money=v=>Number(v||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
-const getP=()=>JSON.parse(localStorage.getItem("ld_projects_v09")||"[]"), setP=x=>localStorage.setItem("ld_projects_v09",JSON.stringify(x));
-const getS=()=>JSON.parse(localStorage.getItem("ld_settings_v09")||'{"company":"LukasDecks Custom Builders","email":"contact@lukasdecks.com","phone":"","frame":5,"deck":5.5,"fascia":3,"railing":80,"step":100,"footing":100}');
+const getP=()=>JSON.parse(localStorage.getItem("ld_projects_v11")||"[]"), setP=x=>localStorage.setItem("ld_projects_v11",JSON.stringify(x));
+const getS=()=>JSON.parse(localStorage.getItem("ld_settings_v11")||'{"company":"","email":"","phone":"","frame":5,"deck":5.5,"fascia":3,"railing":80,"step":100,"footing":100}');
 function showPage(p,el){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$(p+"Page").classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderAll()}
 function loadSettings(){let s=getS();setCompany.value=s.company;setEmail.value=s.email;setPhone.value=s.phone;setFrame.value=s.frame;setDeck.value=s.deck;setFascia.value=s.fascia;setRailing.value=s.railing;setStep.value=s.step;setFooting.value=s.footing;frameRate.value=s.frame;deckRate.value=s.deck;fasciaRate.value=s.fascia;railingRate.value=s.railing;stepRate.value=s.step;footingRate.value=s.footing}
 function calc(){
@@ -92,7 +99,7 @@ function calc(){
   return{id:Date.now(),project:(project.value||"Deck Project").trim(),client:(client.value||"Customer").trim(),status:status.value,area:deckArea,total,labor:lab,profit:prof,hourly:hr,margin:marginPct,notes:notes.value,date:new Date().toLocaleDateString()}
 }
 document.querySelectorAll("#estimatePage input,#estimatePage select,#estimatePage textarea").forEach(x=>x.addEventListener("input",calc));
-function saveProject(){let a=getP();a.unshift(calc());setP(a);saveMsg.textContent="Project saved successfully.";renderAll()}
+function saveProject(){let a=getP();a.unshift(calc());setP(a);saveMsg.textContent="Project salvo com sucesso.";renderAll()}
 function resetForm(){["project","client","notes"].forEach(x=>$(x).value="");calc()}
 function renderProjects(){let a=getP();projectTable.innerHTML=a.length?`<table><thead><tr><th>Project</th><th>Total</th><th>Remaining</th><th>Action</th></tr></thead><tbody>${a.map(p=>`<tr><td><b>${p.project}</b><br><span class="small">${p.client} • ${p.status} • ${Number(p.area||0).toFixed(2)} sf</span></td><td>${money(p.total)}</td><td class="${p.profit>=0?'good':'bad'}">${money(p.profit)}<br><span class="small">${money(p.hourly)}/h</span></td><td><button class="danger" onclick="delP(${p.id})">Delete</button></td></tr>`).join("")}</tbody></table>`:"<p class='small'>No saved projects.</p>"}
 function renderDashboard(){let a=getP(),sales=a.reduce((s,p)=>s+p.total,0),prof=a.reduce((s,p)=>s+p.profit,0);dProjects.textContent=a.length;dSales.textContent=money(sales);dProfit.textContent=money(prof);dAvg.textContent=money(a.length?sales/a.length:0);recent.innerHTML=a.slice(0,5).map(p=>`<div class="result"><span><b>${p.project}</b><br><span class="small">${p.client||"No customer"} • ${Number(p.area||0).toFixed(2)} sf</span></span><b>${money(p.total)}</b></div>`).join("")||"<p class='small'>No saved projects.</p>"}
@@ -113,7 +120,7 @@ function loadInvoiceProject(shouldRender=true){
 }
 function renderInvoice(){
   let p=getP().find(x=>String(x.id)===invoiceProject.value),s=getS();
-  invCompany.textContent=s.company;
+  invCompany.textContent=s.company||"Your Company";
   invContact.textContent=[s.email,s.phone].filter(Boolean).join(" • ");
   invNum.textContent="Invoice #"+invoiceNumber.value;
   invDate.textContent=new Date().toLocaleDateString();
@@ -136,11 +143,14 @@ function renderInvoice(){
   invPaid.textContent=money(paid);
   invBalance.textContent=money(Math.max(0,p.total-paid));
 }
-function saveSettings(){let s={company:setCompany.value,email:setEmail.value,phone:setPhone.value,frame:n("setFrame"),deck:n("setDeck"),fascia:n("setFascia"),railing:n("setRailing"),step:n("setStep"),footing:n("setFooting")};localStorage.setItem("ld_settings_v09",JSON.stringify(s));loadSettings();settingsMsg.textContent="Settings saved.";renderAll()}
+function saveSettings(){let s={company:setCompany.value,email:setEmail.value,phone:setPhone.value,frame:n("setFrame"),deck:n("setDeck"),fascia:n("setFascia"),railing:n("setRailing"),step:n("setStep"),footing:n("setFooting")};localStorage.setItem("ld_settings_v11",JSON.stringify(s));loadSettings();settingsMsg.textContent="Settings salvas.";renderAll()}
 function delP(id){setP(getP().filter(p=>p.id!==id));renderAll()} function clearAll(){if(confirm("Delete All os projetos?")){setP([]);renderAll()}}
 function exportCSV(){let a=getP();if(!a.length)return alert("No project.");let rows=[["Project","Client","Status","Area","Total","Labor","Remainder","Hourly","Margin","Date"],...a.map(p=>[p.project,p.client,p.status,p.area,p.total,p.labor,p.profit,p.hourly,p.margin,p.date])],csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n"),link=document.createElement("a");link.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));link.download="lukasdecks_projects.csv";link.click()}
 function renderAll(){renderDashboard();renderProjects();renderInvoiceSelect();calc()}
-loadSettings();renderAll();
-if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js?v=10")); }
+
+function checkCompanySetup(){let s=getS();let el=document.getElementById("companySetup"); if(el) el.style.display=s.company?"none":"block";}
+function saveCompanyFromSetup(){let s=getS(); s.company=setupCompany.value.trim(); s.email=setupEmail.value.trim(); s.phone=setupPhone.value.trim(); localStorage.setItem("ld_settings_v11",JSON.stringify(s)); loadSettings(); renderAll(); alert("Company saved.");}
+loadSettings();checkCompanySetup();renderAll();
+if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js")); }
 </script>
 </body></html>
