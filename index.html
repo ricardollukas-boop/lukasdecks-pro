@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1f2933">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>LukasDecks Pro v1.4</title>
+<title>Deck Builder Pro v26</title>
 <style>
 :root{--bg:#f4f6f8;--card:#fff;--ink:#16202a;--muted:#6b7785;--accent:#d97706;--dark:#1f2933;--line:#e5e7eb;--good:#15803d;--bad:#b91c1c}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
@@ -23,18 +23,36 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.calc-grid button{margin:0}
 @media(max-width:850px){nav{top:58px}.tabs{display:grid;grid-template-columns:repeat(4,1fr);width:100%}.tab{padding:11px 4px;text-align:center;font-size:13px;white-space:normal;min-height:45px;display:flex;align-items:center;justify-content:center}.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.fields{grid-template-columns:1fr}.full{grid-column:auto}.invoice-head{display:block}.invoice-meta{text-align:left;margin-top:15px}th:nth-child(3),td:nth-child(3){display:none}}
 @media print{header,nav,.no-print{display:none!important}body{background:#fff}main{margin:0;padding:0}.invoice-preview{border:0;max-width:none}.page{display:none!important}#invoicePage{display:block!important}}
+
+.logo-preview{max-width:150px;max-height:80px;object-fit:contain;margin-top:8px;border-radius:8px}
+.doc-logo{max-width:150px;max-height:70px;object-fit:contain;margin-bottom:8px}
+.sharebar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.measure-help{display:block;margin-top:5px;font-size:11px;color:#6b7280}.fraction-input{font-variant-numeric:tabular-nums}
+@media(max-width:600px){main{padding:0 10px 35px;margin-top:14px}.card{padding:14px;border-radius:13px}button{min-height:46px}.btnrow{display:grid;grid-template-columns:1fr}.tabs{grid-template-columns:repeat(2,1fr)}nav{position:static}header{position:static}.invoice-preview{padding:18px}}
+
+.more-wrap{position:relative;margin-left:auto;display:flex;align-items:stretch}.more-btn{margin:0;border-radius:0;background:#111827;color:#fff;padding:13px 16px}.more-menu{position:absolute;right:0;top:100%;min-width:210px;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 35px rgba(0,0,0,.16);overflow:hidden;z-index:20}.more-menu div{padding:13px 15px;border-bottom:1px solid var(--line);cursor:pointer}.more-menu div:last-child{border-bottom:0}.more-menu div:hover{background:#f8fafc}
+@media(max-width:850px){.tabs{display:grid;grid-template-columns:repeat(5,1fr);width:100%}.more-wrap{margin:0;position:relative}.more-btn{width:100%;height:100%;padding:11px 4px;font-size:13px}.more-menu{right:0;top:100%;min-width:200px}.tab{min-height:45px}}
+
 </style>
 </head>
 <body>
-<header><div class="brand"><b>LukasDecks Pro</b><span class="badge">v1.4</span></div></header>
+<header><div class="brand"><b>Deck Builder Pro</b><span class="badge">v26</span></div></header>
 <nav><div class="tabs">
 <div class="tab active" onclick="showPage('dashboard',this)">Dashboard</div>
 <div class="tab" onclick="showPage('estimate',this)">New Estimate</div>
 <div class="tab" onclick="showPage('projects',this)">Projects</div>
-<div class="tab" onclick="showPage('invoice',this)">Invoice</div>
-<div class="tab" onclick="showPage('companies',this)">Companies</div>
-<div class="tab" onclick="showPage('helpers',this)">Helpers</div>
-<div class="tab" onclick="showPage('calculator',this)">Calculator</div>
+<div class="tab" onclick="showPage('deckprofit',this)">Deck Profit</div>
+<div class="more-wrap">
+<button class="more-btn" onclick="toggleMoreMenu(event)">More ▾</button>
+<div id="moreMenu" class="more-menu hidden">
+<div onclick="openFeedbackForm()">Send Feedback</div>
+<div onclick="openMorePage('actualprofit')">Actual Profit</div>
+<div onclick="openMorePage('invoice')">Invoice</div>
+<div onclick="openMorePage('companies')">Companies</div>
+<div onclick="openMorePage('helpers')">Helpers</div>
+<div onclick="openMorePage('calculator')">Calculator</div>
+<div onclick="openMorePage('profile')">Company Profile</div>
+</div>
+</div>
 </div></nav>
 <main>
 
@@ -46,45 +64,166 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 <section id="estimatePage" class="page hidden"><h1>New Estimate</h1><p class="sub">Price, labor, and remaining amount after helpers.</p>
 <div class="grid"><div class="card"><div class="fields">
 <div class="full"><label>Project</label><input id="project" placeholder="Ex: Deck Bridgewater"></div><div><label>Customer</label><input id="client" placeholder="Customer name"></div><div><label>Status</label><select id="status"><option>Estimate</option><option>Approved</option><option>In Progress</option><option>Completed</option><option>Paid</option></select></div>
-<div><label>Width (ft)</label><input id="width" type="number" value="21" step="0.01"></div><div><label>Length (ft)</label><input id="length" type="number" value="16" step="0.01"></div>
-<div><label>Frame ($/sf)</label><input id="frameRate" type="number" value="5" step="0.01"></div><div><label>Decking ($/sf)</label><input id="deckRate" type="number" value="5.5" step="0.01"></div>
-<div><label>Fascia (LF)</label><input id="fascia" type="number" value="56" step="0.01"></div><div><label>Fascia ($/LF)</label><input id="fasciaRate" type="number" value="3" step="0.01"></div>
-<div><label>Railing (LF)</label><input id="railing" type="number" value="32" step="0.01"></div><div><label>Railing ($/LF)</label><input id="railingRate" type="number" value="80" step="0.01"></div>
-<div><label>Steps</label><input id="steps" type="number" value="5" step="1"></div><div><label>Price/step</label><input id="stepRate" type="number" value="100" step="0.01"></div>
-<div><label>Footings</label><input id="footings" type="number" value="6" step="1"></div><div><label>Price/footing</label><input id="footingRate" type="number" value="100" step="0.01"></div>
-<div><label>Days</label><input id="days" type="number" value="4" step="0.5"></div><div><label>Hours/day</label><input id="hoursDay" type="number" value="10" step="0.5"></div>
+<div><label>Width (ft)</label><input id="width" type="number" value="0" placeholder="Ex: 21" step="0.01"></div><div><label>Length (ft)</label><input id="length" type="number" value="0" placeholder="Ex: 16" step="0.01"></div>
+<div><label>Frame ($/sf)</label><input id="frameRate" type="number" value="0" placeholder="Ex: 5" step="0.01"></div><div><label>Decking ($/sf)</label><input id="deckRate" type="number" value="0" placeholder="Ex: 5.50" step="0.01"></div>
+<div><label>Fascia (LF)</label><input id="fascia" type="number" value="0" placeholder="Ex: 56" step="0.01"></div><div><label>Fascia ($/LF)</label><input id="fasciaRate" type="number" value="0" placeholder="Ex: 3" step="0.01"></div>
+<div><label>Railing (LF)</label><input id="railing" type="number" value="0" placeholder="Ex: 32" step="0.01"></div><div><label>Railing ($/LF)</label><input id="railingRate" type="number" value="0" placeholder="Ex: 80" step="0.01"></div>
+<div><label>Steps</label><input id="steps" type="number" value="0" placeholder="Ex: 5" step="1"></div><div><label>Price/step</label><input id="stepRate" type="number" value="0" placeholder="Ex: 100" step="0.01"></div>
+<div><label>Footings</label><input id="footings" type="number" value="0" placeholder="Ex: 6" step="1"></div><div><label>Price/footing</label><input id="footingRate" type="number" value="0" placeholder="Ex: 100" step="0.01"></div>
+<div><label>Days</label><input id="days" type="number" value="0" placeholder="Ex: 4" step="0.5"></div><div><label>Hours/day</label><input id="hoursDay" type="number" value="0" placeholder="Ex: 10" step="0.5"></div>
 <div class="full"><label>Active Helpers</label><div id="estimateHelpers" class="small">No helpers selected. Add them in Helpers.</div></div>
 <div class="full"><label>Invoice Description</label><textarea id="notes" placeholder="Labor for deck construction..."></textarea></div>
-</div><div class="btnrow"><button class="primary" onclick="saveProject()">Save Project</button><button class="secondary" onclick="resetForm()">Clear</button></div><p id="saveMsg" class="small"></p></div>
+</div><div class="btnrow"><button class="primary" onclick="saveProject()">Save Project</button><button class="secondary" onclick="printEstimate()">Estimate PDF</button><button class="secondary" onclick="shareCurrentEstimate()">Share</button><button class="secondary" onclick="resetForm()">Clear</button></div><p id="saveMsg" class="small"></p></div>
 <aside class="card"><h2>Summary</h2><div class="result"><span>Area</span><b id="areaOut">0 sf</b></div><div class="result"><span>Frame</span><b id="fTotal">$0</b></div><div class="result"><span>Decking</span><b id="deTotal">$0</b></div><div class="result"><span>Fascia</span><b id="faTotal">$0</b></div><div class="result"><span>Railing</span><b id="rTotal">$0</b></div><div class="result"><span>Stairs</span><b id="sTotal">$0</b></div><div class="result"><span>Footings</span><b id="foTotal">$0</b></div><p class="small">Estimated Total</p><div id="grand" class="total">$0</div><hr><div class="result"><span>Helper Cost</span><b id="labor">$0</b></div><div class="result"><span>Remaining</span><b id="profit">$0</b></div><div class="result"><span>Your Gross Hourly Earnings</span><b id="hourly">$0/h</b></div><div class="result"><span>Status</span><b id="hourlyStatus">—</b></div><div class="result"><span>Margin</span><b id="margin">0%</b></div><div class="note small">Note: remaining amount does not subtract gas, tools, insurance, taxes, materials purchased by you, or other costs.</div></aside></div></section>
 
-<section id="projectsPage" class="page hidden"><h1>Projects</h1><p class="sub">Saved projects on this device.</p><div class="card"><div class="no-print btnrow"><button class="secondary" onclick="exportCSV()">Export CSV</button><button class="danger" onclick="clearAll()">Delete All</button></div><div id="projectTable"></div></div></section>
+<section id="projectsPage" class="page hidden"><h1>Projects</h1><p class="sub">Saved projects on this device.</p><div class="card"><div class="no-print btnrow"><button class="secondary" onclick="exportCSV()">Export CSV</button><button class="secondary" onclick="exportBackup()">Backup JSON</button><button class="secondary" onclick="document.getElementById('backupFile').click()">Import Backup</button><input id="backupFile" type="file" accept="application/json" class="hidden" onchange="importBackup(event)"><button class="danger" onclick="clearAll()">Delete All</button></div><div id="projectTable"></div></div></section>
 
 <section id="invoicePage" class="page hidden"><h1 class="no-print">Invoice</h1><p class="sub no-print">Select a company and a project, then generate a professional invoice.</p><div class="card no-print">
 <label>Company on Invoice</label><select id="invoiceCompany" onchange="selectCompany(Number(this.value));renderInvoice()"></select>
 <label>Saved Project</label><select id="invoiceProject" onchange="loadInvoiceProject()"></select>
-<div class="fields"><div><label>Customer Name</label><input id="invoiceCustomerName" placeholder="Customer name" oninput="renderInvoice()"></div><div><label>Project Name</label><input id="invoiceProjectName" placeholder="Project name" oninput="renderInvoice()"></div><div><label>Amount Paid ($)</label><input id="amountPaid" type="number" value="0" oninput="renderInvoice()"></div><div><label>Invoice #</label><input id="invoiceNumber" value="1001" oninput="renderInvoice()"></div></div>
-<button class="primary" onclick="window.print()">Generate Invoice PDF</button></div><br>
-<div class="invoice-preview"><div class="invoice-head"><div><h2 id="invCompany">Your Company</h2><div id="invContact" class="small"></div></div><div class="invoice-meta"><b style="font-size:24px;letter-spacing:1px;">INVOICE</b><div id="invNum"></div><div id="invDate"></div></div></div><br><div><b>Bill To:</b><div id="invClient">—</div><br><b>Project:</b><div id="invProject">—</div></div><br><table><thead><tr><th>Service Description</th><th>Amount</th></tr></thead><tbody><tr><td id="invDescription">—</td><td id="invAmount">$0</td></tr></tbody></table><br><div class="result"><span>Invoice Total</span><b id="invTotal">$0</b></div><div class="result"><span>Amount Paid</span><b id="invPaid">$0</b></div><div class="result"><span>Balance Due</span><span id="invBalance" class="invoice-total">$0</span></div><br><p class="small">Thank you for your business.</p></div></section>
+<div class="fields"><div><label>Customer Name</label><input id="invoiceCustomerName" placeholder="Customer name" oninput="renderInvoice()"></div><div><label>Project Name</label><input id="invoiceProjectName" placeholder="Project name" oninput="renderInvoice()"></div><div><label>Amount Paid ($)</label><input id="amountPaid" type="number" value="0" oninput="renderInvoice()"></div><div><label>Invoice #</label><input id="invoiceNumber" value="" placeholder="Ex: 1001" oninput="renderInvoice()"></div></div>
+<div class="btnrow"><button class="primary" onclick="window.print()">Generate Invoice PDF</button><button class="secondary" onclick="shareInvoice()">Share Invoice</button></div></div><br>
+<div class="invoice-preview"><div class="invoice-head"><div><img id="invLogo" class="doc-logo hidden" alt="Company logo"><h2 id="invCompany">Your Company</h2><div id="invContact" class="small"></div></div><div class="invoice-meta"><b style="font-size:24px;letter-spacing:1px;">INVOICE</b><div id="invNum"></div><div id="invDate"></div></div></div><br><div><b>Bill To:</b><div id="invClient">—</div><br><b>Project:</b><div id="invProject">—</div></div><br><table><thead><tr><th>Service Description</th><th>Amount</th></tr></thead><tbody><tr><td id="invDescription">—</td><td id="invAmount">$0</td></tr></tbody></table><br><div class="result"><span>Invoice Total</span><b id="invTotal">$0</b></div><div class="result"><span>Amount Paid</span><b id="invPaid">$0</b></div><div class="result"><span>Balance Due</span><span id="invBalance" class="invoice-total">$0</span></div><br><p class="small">Thank you for your business.</p></div></section>
 
 <section id="companiesPage" class="page hidden"><h1>Companies</h1><p class="sub">Add, select, edit, or delete as many companies as you need.</p><div class="grid"><div class="card"><h2>Add / Edit Company</h2><input id="companyEditId" type="hidden"><div class="fields"><div class="full"><label>Company Name</label><input id="companyName" placeholder="Company name"></div><div><label>Email</label><input id="companyEmail" placeholder="Email"></div><div><label>Phone</label><input id="companyPhone" placeholder="Phone"></div><div><label>Website / Instagram</label><input id="companyWebsite" placeholder="Optional"></div></div><div class="btnrow"><button class="primary" onclick="saveCompanyRecord()">Save Company</button><button class="secondary" onclick="clearCompanyForm()">Clear</button></div><p id="companyMsg" class="small"></p></div><div class="card"><h2>Saved Companies</h2><div id="companiesList"></div></div></div></section>
 
-<section id="helpersPage" class="page hidden"><h1>Helpers</h1><p class="sub">Create unlimited helpers. Activate only the helpers working on the current estimate.</p><div class="grid"><div class="card"><h2>Add / Edit Helper</h2><input id="helperEditId" type="hidden"><div class="fields"><div><label>Helper Name</label><input id="helperName" placeholder="Name"></div><div><label>Hourly Rate ($)</label><input id="helperRate" type="number" step="0.01" placeholder="23"></div></div><div class="btnrow"><button class="primary" onclick="saveHelperRecord()">Save Helper</button><button class="secondary" onclick="clearHelperForm()">Clear</button></div><p id="helperMsg" class="small"></p></div><div class="card"><h2>Saved Helpers</h2><div id="helpersList"></div></div></div></section>
+<section id="helpersPage" class="page hidden"><h1>Helpers</h1><p class="sub">Create unlimited helpers. Activate only the helpers working on the current estimate.</p><div class="grid"><div class="card"><h2>Add / Edit Helper</h2><input id="helperEditId" type="hidden"><div class="fields"><div><label>Helper Name</label><input id="helperName" placeholder="Name"></div><div><label>Hourly Rate ($)</label><input id="helperRate" type="number" step="0.01" placeholder="Ex: 23"></div></div><div class="btnrow"><button class="primary" onclick="saveHelperRecord()">Save Helper</button><button class="secondary" onclick="clearHelperForm()">Clear</button></div><p id="helperMsg" class="small"></p></div><div class="card"><h2>Saved Helpers</h2><div id="helpersList"></div></div></div></section>
+
+
+<section id="deckprofitPage" class="page hidden">
+<h1>Deck Profit Calculator</h1><p class="sub">Calculate suggested labor price, crew cost, margin, and owner earnings.</p>
+<div class="grid">
+<div class="card"><h2>Deck & Scope</h2><div class="fields">
+<div><label>Length (ft)</label><input id="dpLength" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Width (ft)</label><input id="dpWidth" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Footings (each)</label><input id="dpFootings" type="number" min="0" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Footing $ / each</label><input id="dpFootingRate" type="number" min="0" step="0.01" value="100" oninput="calcDeckProfit()"></div>
+<div><label>Frame $ / sq ft</label><input id="dpFrameRate" type="number" min="0" step="0.01" value="5" oninput="calcDeckProfit()"></div>
+<div><label>Decking $ / sq ft</label><input id="dpDeckRate" type="number" min="0" step="0.01" value="5.5" oninput="calcDeckProfit()"></div>
+<div><label>Fascia (linear ft)</label><input id="dpFasciaLf" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Fascia $ / linear ft</label><input id="dpFasciaRate" type="number" min="0" step="0.01" value="3" oninput="calcDeckProfit()"></div>
+<div><label>Railings (linear ft)</label><input id="dpRailLf" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Railing $ / linear ft</label><input id="dpRailRate" type="number" min="0" step="0.01" value="85" oninput="calcDeckProfit()"></div>
+<div><label>Stair steps</label><input id="dpSteps" type="number" min="0" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Stairs $ / step</label><input id="dpStepRate" type="number" min="0" step="0.01" value="100" oninput="calcDeckProfit()"></div>
+</div></div>
+<div class="card"><h2>Crew & Results</h2><div class="fields">
+<div><label>Helpers</label><input id="dpHelpers" type="number" min="0" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Helper hourly rate</label><input id="dpHelperRate" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Hours / day</label><input id="dpHoursDay" type="number" min="0" step="0.1" value="8" oninput="calcDeckProfit()"></div>
+<div><label>Estimated days</label><input id="dpDays" type="number" min="0" step="0.5" value="0" oninput="calcDeckProfit()"></div>
+</div>
+<div class="result"><span>Deck Area</span><b id="dpArea">0 sq ft</b></div>
+<div class="result"><span>Suggested Labor Price</span><b id="dpPrice">$0.00</b></div>
+<div class="result"><span>Crew Cost</span><b id="dpCrewCost">$0.00</b></div>
+<div class="result"><span>Owner Gross Profit</span><b id="dpGross">$0.00</b></div>
+<div class="result"><span>Profit Margin</span><b id="dpMargin">0%</b></div>
+<div class="result"><span>Owner Earnings / Day</span><b id="dpPerDay">$0.00</b></div>
+<div class="result"><span>Owner Earnings / Hour</span><b id="dpPerHour">$0.00</b></div>
+<div class="btnrow"><button class="secondary" onclick="resetDeckProfit()">Reset</button><button class="primary" onclick="saveDeckProfitDefaults()">Save Rates</button></div>
+<p class="small">Rates are editable. Save Rates keeps your preferred pricing on this device.</p>
+</div></div></section>
+
+
+
+<section id="feedbackPage" class="page hidden">
+<h1>Send Feedback</h1>
+<p class="sub">Help improve Deck Builder Pro with honest feedback from real contractors.</p>
+<div class="grid">
+<div class="card">
+<h2>Feedback Form</h2>
+<p class="small">For now, this button opens a ready-to-send email. Later we can connect it to a Google Form so every answer goes into a spreadsheet.</p>
+<div class="fields">
+<div class="full"><label>Your Name (optional)</label><input id="fbName" placeholder="Your name"></div>
+<div class="full"><label>What do you like?</label><textarea id="fbLike" placeholder="What worked well?"></textarea></div>
+<div class="full"><label>What is confusing?</label><textarea id="fbConfusing" placeholder="What was hard to understand?"></textarea></div>
+<div class="full"><label>What is missing?</label><textarea id="fbMissing" placeholder="What should be added?"></textarea></div>
+<div class="full"><label>Bug or problem?</label><textarea id="fbBug" placeholder="Describe any bug or issue."></textarea></div>
+<div class="full"><label>Would you use this for your business?</label>
+<select id="fbUse"><option>Yes</option><option>Maybe</option><option>No</option></select></div>
+</div>
+<div class="btnrow"><button class="primary" onclick="sendFeedbackEmail()">Send Feedback</button><button class="secondary" onclick="clearFeedbackForm()">Clear</button></div>
+<p id="fbMsg" class="small"></p>
+</div>
+<div class="card">
+<h2>What to ask testers</h2>
+<div class="note">Ask deck builders to test one real estimate, one project, and the Deck Profit calculator. The best feedback is what they would actually use on a job site.</div>
+<p class="small">Recommended test questions: Is the app simple? Are the deck prices useful? Is anything missing? Would you pay for this if it saved time?</p>
+</div>
+</div>
+</section>
+
+<section id="actualprofitPage" class="page hidden">
+<h1>Actual vs Estimated Profit</h1>
+<p class="sub">Compare what you expected to earn with what the project actually produced.</p>
+<div class="grid">
+<div class="card"><h2>Project Results</h2><div class="fields">
+<div class="full"><label>Project Name</label><input id="apProject" placeholder="Ex: Deck Project"></div>
+<div><label>Project Price / Revenue</label><input id="apRevenue" type="number" min="0" step="0.01" value="0" oninput="calcActualProfit()"></div>
+<div><label>Estimated Profit</label><input id="apEstimatedProfit" type="number" step="0.01" value="0" oninput="calcActualProfit()"></div>
+<div><label>Estimated Days</label><input id="apEstimatedDays" type="number" min="0" step="0.5" value="0" oninput="calcActualProfit()"></div>
+<div><label>Actual Days</label><input id="apActualDays" type="number" min="0" step="0.5" value="0" oninput="calcActualProfit()"></div>
+<div><label>Your Actual Hours</label><input id="apOwnerHours" type="number" min="0" step="0.5" value="0" oninput="calcActualProfit()"></div>
+<div><label>Actual Crew Cost</label><input id="apCrewCost" type="number" min="0" step="0.01" value="0" oninput="calcActualProfit()"></div>
+<div><label>Extra Materials</label><input id="apMaterials" type="number" min="0" step="0.01" value="0" oninput="calcActualProfit()"></div>
+<div><label>Gas / Tolls</label><input id="apTravel" type="number" min="0" step="0.01" value="0" oninput="calcActualProfit()"></div>
+<div><label>Other Costs</label><input id="apOther" type="number" min="0" step="0.01" value="0" oninput="calcActualProfit()"></div>
+</div>
+<div class="btnrow"><button class="primary" onclick="saveActualProfitRecord()">Save Result</button><button class="secondary" onclick="resetActualProfit()">Clear</button></div>
+<p id="apSaveMsg" class="small"></p></div>
+<div class="card"><h2>Comparison</h2>
+<div class="result"><span>Estimated Profit</span><b id="apEstOut">$0.00</b></div>
+<div class="result"><span>Actual Total Costs</span><b id="apCostsOut">$0.00</b></div>
+<div class="result"><span>Actual Profit</span><b id="apActualOut">$0.00</b></div>
+<div class="result"><span>Difference</span><b id="apDiffOut">$0.00</b></div>
+<div class="result"><span>Actual Margin</span><b id="apMarginOut">0%</b></div>
+<div class="result"><span>Profit / Actual Day</span><b id="apDayOut">$0.00</b></div>
+<div class="result"><span>Real Owner Earnings / Hour</span><b id="apHourOut">$0.00</b></div>
+<div id="apWarning" class="note">Enter project results to compare estimated and actual profit.</div>
+</div></div>
+<div class="card" style="margin-top:18px"><h2>Saved Profit Results</h2><div id="apHistory" class="small">No saved results.</div></div>
+</section>
 
 <section id="calculatorPage" class="page hidden"><h1>Calculator</h1><p class="sub">Quick tools for deck work and everyday calculations.</p><div class="grid"><div class="card"><h2>Regular Calculator</h2><input id="calcDisplay" readonly value="0" style="font-size:26px;text-align:right"><div class="calc-grid"><button class="secondary" onclick="cKey('7')">7</button><button class="secondary" onclick="cKey('8')">8</button><button class="secondary" onclick="cKey('9')">9</button><button class="secondary" onclick="cKey('/')">÷</button><button class="secondary" onclick="cKey('4')">4</button><button class="secondary" onclick="cKey('5')">5</button><button class="secondary" onclick="cKey('6')">6</button><button class="secondary" onclick="cKey('*')">×</button><button class="secondary" onclick="cKey('1')">1</button><button class="secondary" onclick="cKey('2')">2</button><button class="secondary" onclick="cKey('3')">3</button><button class="secondary" onclick="cKey('-')">−</button><button class="secondary" onclick="cKey('0')">0</button><button class="secondary" onclick="cKey('.')">.</button><button class="primary" onclick="cEquals()">=</button><button class="secondary" onclick="cKey('+')">+</button></div><button class="danger" onclick="cClear()">Clear</button></div>
-<div class="card"><h2>Deck Area</h2><div class="fields"><div><label>Width (ft)</label><input id="caWidth" type="number" step="0.01" oninput="deckTools()"></div><div><label>Length (ft)</label><input id="caLength" type="number" step="0.01" oninput="deckTools()"></div></div><div class="result"><span>Area</span><b id="caArea">0 sf</b></div><h2 style="margin-top:20px">Board Calculator</h2><div class="fields"><div><label>Deck width across boards (ft)</label><input id="cbWidth" type="number" step="0.01" oninput="deckTools()"></div><div><label>Board face width (in)</label><input id="cbBoard" type="number" value="5.5" step="0.01" oninput="deckTools()"></div><div><label>Gap (in)</label><input id="cbGap" type="number" value="0.1875" step="0.0001" oninput="deckTools()"></div></div><div class="result"><span>Approx. boards</span><b id="cbCount">0</b></div><h2 style="margin-top:20px">Linear Feet</h2><div class="fields"><div><label>Quantity</label><input id="lfQty" type="number" oninput="deckTools()"></div><div><label>Length each (ft)</label><input id="lfLen" type="number" step="0.01" oninput="deckTools()"></div></div><div class="result"><span>Total LF</span><b id="lfTotal">0</b></div></div>
-<div class="card"><h2>Railing Calculator</h2><div class="fields"><div><label>Total railing LF</label><input id="crLF" type="number" step="0.01" oninput="deckTools()"></div><div><label>Section length (ft)</label><input id="crSection" type="number" value="6" step="0.01" oninput="deckTools()"></div></div><div class="result"><span>Approx. sections</span><b id="crCount">0</b></div><h2 style="margin-top:20px">Stairs</h2><div class="fields"><div><label>Total rise (in)</label><input id="csRise" type="number" step="0.01" oninput="deckTools()"></div><div><label>Target riser (in)</label><input id="csRiser" type="number" value="7.5" step="0.01" oninput="deckTools()"></div></div><div class="result"><span>Approx. risers</span><b id="csCount">0</b></div><h2 style="margin-top:20px">Profit / Helper Cost</h2><div class="fields"><div><label>Job price ($)</label><input id="cpPrice" type="number" step="0.01" oninput="deckTools()"></div><div><label>Other costs ($)</label><input id="cpCosts" type="number" step="0.01" oninput="deckTools()"></div><div><label>Days</label><input id="cpDays" type="number" step="0.5" oninput="deckTools()"></div><div><label>Hours/day</label><input id="cpHours" type="number" value="10" step="0.5" oninput="deckTools()"></div></div><div class="result"><span>Active helper cost</span><b id="cpHelper">$0</b></div><div class="result"><span>Remaining</span><b id="cpRemain">$0</b></div></div></div></section>
+<div class="card"><h2>Deck Area</h2><div class="fields"><div><label>Width (ft)</label><input id="caWidth" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 12 ½" oninput="deckTools()"></div><div><label>Length (ft)</label><input id="caLength" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 16 ⅜" oninput="deckTools()"></div></div><div class="result"><span>Area</span><b id="caArea">0 sf</b></div><h2 style="margin-top:20px">Board Calculator</h2><div class="fields"><div><label>Deck width across boards (ft)</label><input id="cbWidth" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 21 ¼" oninput="deckTools()"></div><div><label>Board face width (in)</label><input id="cbBoard" class="fraction-input" type="text" inputmode="decimal" value="5 ½" placeholder="Ex: 5 ⅜ or 5.375" oninput="deckTools()"><small class="measure-help">Accepts fractions: ¼, ⅜, ½, ⅝, ¾, ⅞</small></div><div><label>Gap (in)</label><input id="cbGap" class="fraction-input" type="text" inputmode="decimal" value="3/16" placeholder="Ex: ¼ or 3/16" oninput="deckTools()"><small class="measure-help">Type ¼ directly — no need to know 0.25</small></div></div><div class="result"><span>Approx. boards</span><b id="cbCount">0</b></div><h2 style="margin-top:20px">Linear Feet</h2><div class="fields"><div><label>Quantity</label><input id="lfQty" type="number" oninput="deckTools()"></div><div><label>Length each (ft)</label><input id="lfLen" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 12 ½" oninput="deckTools()"></div></div><div class="result"><span>Total LF</span><b id="lfTotal">0</b></div></div>
+<div class="card"><h2>Railing Calculator</h2><div class="fields"><div><label>Total railing LF</label><input id="crLF" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 32 ⅜" oninput="deckTools()"></div><div><label>Section length (ft)</label><input id="crSection" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 6 ½" value="6" oninput="deckTools()"></div></div><div class="result"><span>Approx. sections</span><b id="crCount">0</b></div><h2 style="margin-top:20px">Stairs</h2><div class="fields"><div><label>Total rise (in)</label><input id="csRise" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 42 ⅜" oninput="deckTools()"><small class="measure-help">Accepts mixed measures like 42 ⅜</small></div><div><label>Target riser (in)</label><input id="csRiser" class="fraction-input" type="text" inputmode="decimal" value="7 ½" placeholder="Ex: 7 ½" oninput="deckTools()"><small class="measure-help">Accepts fractions and decimals</small></div></div><div class="result"><span>Approx. risers</span><b id="csCount">0</b></div><h2 style="margin-top:20px">Profit / Helper Cost</h2><div class="fields"><div><label>Job price ($)</label><input id="cpPrice" type="number" step="0.01" oninput="deckTools()"></div><div><label>Other costs ($)</label><input id="cpCosts" type="number" step="0.01" oninput="deckTools()"></div><div><label>Days</label><input id="cpDays" type="number" step="0.5" oninput="deckTools()"></div><div><label>Hours/day</label><input id="cpHours" type="number" value="10" step="0.5" oninput="deckTools()"></div></div><div class="result"><span>Active helper cost</span><b id="cpHelper">$0</b></div><div class="result"><span>Remaining</span><b id="cpRemain">$0</b></div></div></div></section>
+
+<section id="profilePage" class="page hidden"><h1>Company Profile</h1><p class="sub">Saved on this device and used on estimates and invoices.</p>
+<div class="card"><div class="fields">
+<div class="full"><label>Company Name</label><input id="profileCompany" placeholder="Your Company Name"></div>
+<div><label>Email</label><input id="profileEmail" type="email" placeholder="email@example.com"></div>
+<div><label>Phone</label><input id="profilePhone" placeholder="Phone"></div>
+<div class="full"><label>Address / Service Area</label><input id="profileAddress" placeholder="Your service area"></div>
+<div class="full"><label>Website / Instagram</label><input id="profileWebsite" placeholder="website.com / @instagram"></div>
+<div class="full"><label>Company Logo</label><input id="profileLogoFile" type="file" accept="image/*" onchange="previewProfileLogo(event)"><img id="profileLogoPreview" class="logo-preview hidden" alt="Logo preview"></div>
+<div class="full"><label>Default Payment / Notes</label><textarea id="profileTerms" placeholder="Thank you for your business."></textarea></div>
+</div><div class="btnrow"><button class="primary" onclick="saveProfile()">Save Profile</button><button class="secondary" onclick="removeProfileLogo()">Remove Logo</button></div><p id="profileMsg" class="small"></p></div></section>
+
 </main>
 
 <script>
-const $=id=>document.getElementById(id), n=id=>{let e=$(id);return e?Number(String(e.value||"").replace(",","."))||0:0}, money=v=>Number(v||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
+const $=id=>document.getElementById(id);
+function parseMeasure(v){
+  let s=String(v??"").trim().replace(/,/g,".").replace(/[″”]/g,'').replace(/[′’]/g," ");
+  if(!s)return 0;
+  const uni={"¼":1/4,"½":1/2,"¾":3/4,"⅛":1/8,"⅜":3/8,"⅝":5/8,"⅞":7/8,"⅓":1/3,"⅔":2/3};
+  let total=0;
+  for(const [ch,val] of Object.entries(uni)){if(s.includes(ch)){total+=val;s=s.replaceAll(ch," ")}}
+  s=s.replace(/(\d+)\s*[- ]\s*(\d+)\s*\/\s*(\d+)/g,(_,w,a,b)=>`${w} ${a}/${b}`);
+  for(const part of s.split(/\s+/).filter(Boolean)){
+    if(part.includes('/')){const [a,b]=part.split('/').map(Number);if(Number.isFinite(a)&&b)total+=a/b}
+    else {const x=Number(part);if(Number.isFinite(x))total+=x}
+  }
+  return total;
+}
+const n=id=>{let e=$(id);return e?parseMeasure(e.value):0}, money=v=>Number(v||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
 const getP=()=>JSON.parse(localStorage.getItem("ld_projects_v12")||localStorage.getItem("ld_projects_v11")||"[]"), setP=x=>localStorage.setItem("ld_projects_v12",JSON.stringify(x));
 const getCompanies=()=>JSON.parse(localStorage.getItem("ld_companies_v12")||"[]"), setCompanies=x=>localStorage.setItem("ld_companies_v12",JSON.stringify(x));
 const getActiveCompanyId=()=>localStorage.getItem("ld_active_company_v12")||"", setActiveCompanyId=id=>localStorage.setItem("ld_active_company_v12",String(id));
 const getHelpers=()=>JSON.parse(localStorage.getItem("ld_helpers_v12")||"[]"), setHelpers=x=>localStorage.setItem("ld_helpers_v12",JSON.stringify(x));
 function showPage(p,el){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$(p+"Page").classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));el.classList.add("active");renderAll();}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function migrate(){const key="ld_company_migration_done_v15";if(localStorage.getItem(key)==="1")return;let a=getCompanies();if(!a.length){let legacy=JSON.parse(localStorage.getItem("ld_settings_v11")||"{}");if(legacy.company){let c={id:Date.now(),name:legacy.company,email:legacy.email||"",phone:legacy.phone||"",website:legacy.website||""};setCompanies([c]);setActiveCompanyId(c.id)}}localStorage.setItem(key,"1")}
+function migrate(){const key="ld_privacy_clean_done_v19";if(localStorage.getItem(key)==="1")return;localStorage.removeItem("ld_settings_v11");localStorage.removeItem("lukasdecks_company_profile_v18");localStorage.removeItem("ld_companies_v12");localStorage.removeItem("ld_active_company_v12");localStorage.setItem("ld_company_migration_done_v15","1");localStorage.setItem(key,"1")}
 function activeCompany(){let a=getCompanies();return a.find(c=>String(c.id)===getActiveCompanyId())||a[0]||null}
 function checkCompanySetup(){}
 function saveCompanyFromSetup(){}
@@ -103,18 +242,193 @@ function renderHelpers(){let a=getHelpers();helpersList.innerHTML=a.length?a.map
 function activeHelperHourly(){return getHelpers().filter(h=>h.active).reduce((s,h)=>s+Number(h.rate||0),0)}
 function calc(){let area=n("width")*n("length"),frame=area*n("frameRate"),deck=area*n("deckRate"),fas=n("fascia")*n("fasciaRate"),rail=n("railing")*n("railingRate"),st=n("steps")*n("stepRate"),foot=n("footings")*n("footingRate"),total=frame+deck+fas+rail+st+foot,lab=activeHelperHourly()*n("hoursDay")*n("days"),prof=total-lab,ownerHours=n("hoursDay")*n("days"),hr=ownerHours?prof/ownerHours:0,marginPct=total?prof/total*100:0;areaOut.textContent=area.toFixed(2)+" sf";[["fTotal",frame],["deTotal",deck],["faTotal",fas],["rTotal",rail],["sTotal",st],["foTotal",foot],["labor",lab]].forEach(a=>$(a[0]).textContent=money(a[1]));grand.textContent=money(total);profit.textContent=money(prof);hourly.textContent=money(hr)+"/h";margin.textContent=marginPct.toFixed(1)+"%";let statusText="🔴 Low",statusClass="bad";if(hr>=45){statusText="🟢 Good";statusClass="good"}else if(hr>=35){statusText="🟡 Acceptable";statusClass=""}profit.className=prof>=0?"good":"bad";hourly.className=statusClass;hourlyStatus.textContent=statusText;hourlyStatus.className=statusClass;margin.className=marginPct>=30?"good":"bad";return{id:Date.now(),project:(project.value||"Deck Project").trim(),client:(client.value||"Customer").trim(),status:status.value,area,total,labor:lab,profit:prof,hourly:hr,margin:marginPct,notes:notes.value,date:new Date().toLocaleDateString(),companyId:getActiveCompanyId(),helperIds:getHelpers().filter(h=>h.active).map(h=>h.id)}}
 document.querySelectorAll("#estimatePage input,#estimatePage select,#estimatePage textarea").forEach(x=>x.addEventListener("input",()=>{calc();deckTools()}));
-function saveProject(){if(!activeCompany())return alert("Please add/select a company first.");let a=getP();a.unshift(calc());setP(a);saveMsg.textContent="Project saved successfully.";renderAll()}
-function resetForm(){["project","client","notes"].forEach(x=>$(x).value="");calc()}
-function renderProjects(){let a=getP();projectTable.innerHTML=a.length?`<table><thead><tr><th>Project</th><th>Total</th><th>Remaining</th><th>Action</th></tr></thead><tbody>${a.map(p=>`<tr><td><b>${esc(p.project)}</b><br><span class="small">${esc(p.client)} • ${esc(p.status)} • ${Number(p.area||0).toFixed(2)} sf</span></td><td>${money(p.total)}</td><td class="${p.profit>=0?'good':'bad'}">${money(p.profit)}<br><span class="small">${money(p.hourly)}/h</span></td><td><button class="danger" onclick="delP(${p.id})">Delete</button></td></tr>`).join("")}</tbody></table>`:"<p class='small'>No saved projects.</p>"}
+function saveProject(){let a=getP();let obj=calc();let editId=localStorage.getItem("ld_editing_project_v19");if(editId){let i=a.findIndex(p=>String(p.id)===editId);if(i>=0){obj.id=Number(editId);obj.createdAt=a[i].createdAt||a[i].date;obj.updatedAt=new Date().toLocaleDateString();a[i]=obj}else a.unshift(obj);localStorage.removeItem("ld_editing_project_v19");saveMsg.textContent="Project updated successfully."}else{obj.createdAt=new Date().toISOString();a.unshift(obj);saveMsg.textContent="Project saved successfully."}setP(a);renderAll()}
+function resetForm(){localStorage.removeItem("ld_editing_project_v19");["project","client","notes"].forEach(x=>$(x).value="");["width","length","frameRate","deckRate","fascia","fasciaRate","railing","railingRate","steps","stepRate","footings","footingRate","days","hoursDay"].forEach(x=>$(x).value="0");calc()}
+function renderProjects(){let a=getP();projectTable.innerHTML=a.length?`<table><thead><tr><th>Project</th><th>Total</th><th>Remaining</th><th>Action</th></tr></thead><tbody>${a.map(p=>`<tr><td><b>${esc(p.project)}</b><br><span class="small">${esc(p.client)} • ${esc(p.status||'Estimate')} • ${Number(p.area||0).toFixed(2)} sf</span></td><td>${money(p.total)}</td><td class="${p.profit>=0?'good':'bad'}">${money(p.profit)}<br><span class="small">${money(p.hourly)}/h</span></td><td><div class="btnrow"><button class="secondary" onclick="editProject(${p.id})">Edit</button><button class="secondary" onclick="duplicateProject(${p.id})">Copy</button><button class="primary" onclick="markPaid(${p.id})">Paid</button><button class="danger" onclick="delP(${p.id})">Delete</button></div></td></tr>`).join("")}</tbody></table>`:"<p class='small'>No saved projects.</p>"}
 function renderDashboard(){let a=getP(),sales=a.reduce((s,p)=>s+Number(p.total||0),0),prof=a.reduce((s,p)=>s+Number(p.profit||0),0);dProjects.textContent=a.length;dSales.textContent=money(sales);dProfit.textContent=money(prof);dAvg.textContent=money(a.length?sales/a.length:0);recent.innerHTML=a.slice(0,5).map(p=>`<div class="result"><span><b>${esc(p.project)}</b><br><span class="small">${esc(p.client||"No customer")} • ${Number(p.area||0).toFixed(2)} sf</span></span><b>${money(p.total)}</b></div>`).join("")||"<p class='small'>No saved projects.</p>"}
 function renderInvoiceSelect(){let a=getP(),cur=invoiceProject.value;invoiceProject.innerHTML=a.map(p=>`<option value="${p.id}">${esc(p.project)} — ${esc(p.client)}</option>`).join("")||"<option value=''>No saved project</option>";if(cur&&a.some(p=>String(p.id)===cur))invoiceProject.value=cur;loadInvoiceProject(false)}
 function loadInvoiceProject(){let p=getP().find(x=>String(x.id)===invoiceProject.value);if(p){invoiceCustomerName.value=p.client||"";invoiceProjectName.value=p.project||""}renderInvoice()}
-function renderInvoice(){let p=getP().find(x=>String(x.id)===invoiceProject.value),s=activeCompany();invCompany.textContent=s?.name||"Your Company";invContact.textContent=s?[s.email,s.phone,s.website].filter(Boolean).join(" • "):"";invNum.textContent="Invoice #"+invoiceNumber.value;invDate.textContent=new Date().toLocaleDateString();let customer=invoiceCustomerName.value.trim()||(p&&p.client)||"Customer",projectName=invoiceProjectName.value.trim()||(p&&p.project)||"Project",paid=n("amountPaid");invClient.textContent=customer;invProject.textContent=projectName;if(!p){invDescription.textContent="Labor / deck construction";invAmount.textContent=invTotal.textContent="$0.00";invPaid.textContent=money(paid);invBalance.textContent="$0.00";return}invDescription.textContent=p.notes||("Labor / deck construction — "+projectName+" — "+Number(p.area||0).toFixed(2)+" sf");invAmount.textContent=money(p.total);invTotal.textContent=money(p.total);invPaid.textContent=money(paid);invBalance.textContent=money(Math.max(0,p.total-paid))}
+function renderInvoice(){applyProfileToDocs();let p=getP().find(x=>String(x.id)===invoiceProject.value),s=activeCompany();let prof=getProfile();invCompany.textContent=prof.company||s?.name||"Your Company";invContact.textContent=[prof.email||s?.email,prof.phone||s?.phone,prof.address,prof.website||s?.website].filter(Boolean).join(" • ");invNum.textContent="Invoice #"+invoiceNumber.value;invDate.textContent=new Date().toLocaleDateString();let customer=invoiceCustomerName.value.trim()||(p&&p.client)||"Customer",projectName=invoiceProjectName.value.trim()||(p&&p.project)||"Project",paid=n("amountPaid");invClient.textContent=customer;invProject.textContent=projectName;if(!p){invDescription.textContent="Labor / deck construction";invAmount.textContent=invTotal.textContent="$0.00";invPaid.textContent=money(paid);invBalance.textContent="$0.00";return}invDescription.textContent=p.notes||("Labor / deck construction — "+projectName+" — "+Number(p.area||0).toFixed(2)+" sf");invAmount.textContent=money(p.total);invTotal.textContent=money(p.total);invPaid.textContent=money(paid);invBalance.textContent=money(Math.max(0,p.total-paid))}
+
+function editProject(id){let p=getP().find(x=>x.id===id);if(!p)return;localStorage.setItem("ld_editing_project_v19",String(id));project.value=p.project||"";client.value=p.client||"";status.value=p.status||"Estimate";notes.value=p.notes||"";showPage('estimate',document.querySelector('.tab[onclick*="estimate"]')||document.querySelectorAll('.tab')[1]);calc();saveMsg.textContent="Editing saved project. Press Save Project to update."}
+function duplicateProject(id){let a=getP(),p=a.find(x=>x.id===id);if(!p)return;let copy={...p,id:Date.now(),project:(p.project||'Project')+' Copy',status:'Estimate',date:new Date().toLocaleDateString(),createdAt:new Date().toISOString()};a.unshift(copy);setP(a);renderAll()}
+function markPaid(id){let a=getP(),p=a.find(x=>x.id===id);if(!p)return;p.status='Paid';p.paidDate=new Date().toLocaleDateString();setP(a);renderAll()}
+function exportBackup(){let data={app:'Deck Builder Pro',version:'v26',exportedAt:new Date().toISOString(),projects:getP(),companies:getCompanies(),helpers:getHelpers(),profile:getProfile()};let link=document.createElement('a');link.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));link.download='deck-builder-backup-v26.json';link.click()}
+function importBackup(e){let f=e.target.files&&e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(d.projects)setP(d.projects);if(d.companies)setCompanies(d.companies);if(d.helpers)setHelpers(d.helpers);if(d.profile)localStorage.setItem(PROFILE_KEY,JSON.stringify(d.profile));alert('Backup imported successfully.');loadProfile();renderAll()}catch(err){alert('Invalid backup file.')}};r.readAsText(f);e.target.value=''}
 function delP(id){setP(getP().filter(p=>p.id!==id));renderAll()}function clearAll(){if(confirm("Delete all projects?")){setP([]);renderAll()}}
-function exportCSV(){let a=getP();if(!a.length)return alert("No project.");let rows=[["Project","Client","Status","Area","Total","Labor","Remaining","Hourly","Margin","Date"],...a.map(p=>[p.project,p.client,p.status,p.area,p.total,p.labor,p.profit,p.hourly,p.margin,p.date])],csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n"),link=document.createElement("a");link.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));link.download="lukasdecks_projects.csv";link.click()}
+function exportCSV(){let a=getP();if(!a.length)return alert("No project.");let rows=[["Project","Client","Status","Area","Total","Labor","Remaining","Hourly","Margin","Date"],...a.map(p=>[p.project,p.client,p.status,p.area,p.total,p.labor,p.profit,p.hourly,p.margin,p.date])],csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n"),link=document.createElement("a");link.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));link.download="deck_builder_projects.csv";link.click()}
 let calcExpr="";function cKey(k){calcExpr+=k;calcDisplay.value=calcExpr||"0"}function cClear(){calcExpr="";calcDisplay.value="0"}function cEquals(){try{if(!/^[0-9+\-*/.() ]+$/.test(calcExpr))throw 0;let v=Function('"use strict";return ('+calcExpr+')')();calcExpr=String(Number.isFinite(v)?v:0);calcDisplay.value=calcExpr}catch(e){calcDisplay.value="Error";calcExpr=""}}
 function deckTools(){caArea.textContent=(n("caWidth")*n("caLength")).toFixed(2)+" sf";let pitch=n("cbBoard")+n("cbGap");cbCount.textContent=pitch?Math.ceil(n("cbWidth")*12/pitch):0;lfTotal.textContent=(n("lfQty")*n("lfLen")).toFixed(2);crCount.textContent=n("crSection")?Math.ceil(n("crLF")/n("crSection")):0;csCount.textContent=n("csRiser")?Math.ceil(n("csRise")/n("csRiser")):0;let hc=activeHelperHourly()*n("cpHours")*n("cpDays");cpHelper.textContent=money(hc);cpRemain.textContent=money(n("cpPrice")-n("cpCosts")-hc)}
 function renderAll(){renderCompanies();renderHelpers();renderDashboard();renderProjects();renderInvoiceSelect();calc();renderInvoice();checkCompanySetup();deckTools()}
 migrate();renderAll();if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"))}
+
+const PROFILE_KEY='deck_builder_company_profile_v19';
+function getProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}')}catch(e){return {}}}
+function loadProfile(){
+ const x=getProfile();
+ const map={profileCompany:'company',profileEmail:'email',profilePhone:'phone',profileAddress:'address',profileWebsite:'website',profileTerms:'terms'};
+ Object.keys(map).forEach(id=>{const el=document.getElementById(id); if(el) el.value=x[map[id]]||''});
+ const im=document.getElementById('profileLogoPreview'); if(im&&x.logo){im.src=x.logo;im.classList.remove('hidden')}
+ applyProfileToDocs();
+}
+function previewProfileLogo(e){
+ const f=e.target.files&&e.target.files[0]; if(!f)return;
+ if(f.size>1500000){alert('Please choose a logo smaller than 1.5 MB.');e.target.value='';return}
+ const r=new FileReader();r.onload=()=>{const im=document.getElementById('profileLogoPreview');im.src=r.result;im.classList.remove('hidden');im.dataset.pending=r.result};r.readAsDataURL(f)
+}
+function saveProfile(){
+ const old=getProfile(), im=document.getElementById('profileLogoPreview');
+ const x={company:profileCompany.value.trim(),email:profileEmail.value.trim(),phone:profilePhone.value.trim(),address:profileAddress.value.trim(),website:profileWebsite.value.trim(),terms:profileTerms.value.trim(),logo:(im&&im.dataset.pending)||old.logo||''};
+ localStorage.setItem(PROFILE_KEY,JSON.stringify(x));profileMsg.textContent='Company profile saved.';applyProfileToDocs();setTimeout(()=>profileMsg.textContent='',2500)
+}
+function removeProfileLogo(){const x=getProfile();x.logo='';localStorage.setItem(PROFILE_KEY,JSON.stringify(x));const im=document.getElementById('profileLogoPreview');im.src='';im.dataset.pending='';im.classList.add('hidden');applyProfileToDocs()}
+function applyProfileToDocs(){
+ const x=getProfile(), logo=document.getElementById('invLogo');
+ if(logo){if(x.logo){logo.src=x.logo;logo.classList.remove('hidden')}else logo.classList.add('hidden')}
+}
+function currentEstimateText(){
+ const name=(document.getElementById('project')?.value||'Project').trim();
+ const customer=(document.getElementById('client')?.value||'').trim();
+ const total=document.getElementById('grand')?.textContent||'$0';
+ const notes=(document.getElementById('notes')?.value||'').trim();
+ const x=getProfile();
+ return `${x.company||'Your Company'}\nESTIMATE\nProject: ${name}\nCustomer: ${customer||'—'}\nEstimated Total: ${total}\n${notes?`Description: ${notes}\n`:''}${x.phone?`Phone: ${x.phone}\n`:''}${x.email?`Email: ${x.email}\n`:''}${x.website?`${x.website}\n`:''}`;
+}
+function printEstimate(){
+ const x=getProfile(), body=currentEstimateText().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
+ const logo=x.logo?`<img src="${x.logo}" style="max-width:160px;max-height:80px"><br>`:'';
+ const w=window.open('','_blank');w.document.write(`<html><head><title>Estimate</title><meta name="viewport" content="width=device-width"><style>body{font-family:Arial,sans-serif;padding:36px;color:#17202a}.doc{max-width:760px;margin:auto;border:1px solid #ddd;padding:32px}h1{letter-spacing:2px}hr{border:0;border-top:2px solid #222}.more-wrap{position:relative;margin-left:auto;display:flex;align-items:stretch}.more-btn{margin:0;border-radius:0;background:#111827;color:#fff;padding:13px 16px}.more-menu{position:absolute;right:0;top:100%;min-width:210px;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 35px rgba(0,0,0,.16);overflow:hidden;z-index:20}.more-menu div{padding:13px 15px;border-bottom:1px solid var(--line);cursor:pointer}.more-menu div:last-child{border-bottom:0}.more-menu div:hover{background:#f8fafc}
+@media(max-width:850px){.tabs{display:grid;grid-template-columns:repeat(5,1fr);width:100%}.more-wrap{margin:0;position:relative}.more-btn{width:100%;height:100%;padding:11px 4px;font-size:13px}.more-menu{right:0;top:100%;min-width:200px}.tab{min-height:45px}}
+
+</style></head><body><div class="doc">${logo}<h1>ESTIMATE</h1><hr><p>${body}</p></div><script>setTimeout(()=>window.print(),300)<\/script></body></html>`);w.document.close()
+}
+async function shareText(title,text){
+ if(navigator.share){try{await navigator.share({title,text});return}catch(e){if(e.name==='AbortError')return}}
+ try{await navigator.clipboard.writeText(text);alert('Copied. You can paste it into WhatsApp or email.')}catch(e){alert(text)}
+}
+function shareCurrentEstimate(){shareText('Estimate',currentEstimateText())}
+function shareInvoice(){
+ const text=`${getProfile().company||'Your Company'}\nINVOICE #${document.getElementById('invoiceNumber')?.value||''}\nCustomer: ${document.getElementById('invoiceCustomerName')?.value||'—'}\nProject: ${document.getElementById('invoiceProjectName')?.value||'—'}\nTotal: ${document.getElementById('invTotal')?.textContent||'$0'}\nBalance Due: ${document.getElementById('invBalance')?.textContent||'$0'}`;
+ shareText('Invoice',text)
+}
+window.addEventListener('load',loadProfile);
+
+
+function dpNum(id){return Math.max(0,parseFloat(document.getElementById(id)?.value)||0)}
+function dpMoney(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n||0)}
+function calcDeckProfit(){
+  const area=dpNum('dpLength')*dpNum('dpWidth');
+  const price=area*dpNum('dpFrameRate')+area*dpNum('dpDeckRate')+
+    dpNum('dpFootings')*dpNum('dpFootingRate')+dpNum('dpFasciaLf')*dpNum('dpFasciaRate')+
+    dpNum('dpRailLf')*dpNum('dpRailRate')+dpNum('dpSteps')*dpNum('dpStepRate');
+  const hours=dpNum('dpHoursDay')*dpNum('dpDays');
+  const crew=dpNum('dpHelpers')*dpNum('dpHelperRate')*hours;
+  const gross=price-crew, margin=price>0?(gross/price*100):0;
+  const perDay=dpNum('dpDays')>0?gross/dpNum('dpDays'):0;
+  const perHour=hours>0?gross/hours:0;
+  document.getElementById('dpArea').textContent=area.toFixed(2)+' sq ft';
+  document.getElementById('dpPrice').textContent=dpMoney(price);
+  document.getElementById('dpCrewCost').textContent=dpMoney(crew);
+  document.getElementById('dpGross').textContent=dpMoney(gross);
+  document.getElementById('dpMargin').textContent=margin.toFixed(1)+'%';
+  document.getElementById('dpPerDay').textContent=dpMoney(perDay);
+  document.getElementById('dpPerHour').textContent=dpMoney(perHour);
+}
+function saveDeckProfitDefaults(){
+ const ids=['dpFootingRate','dpFrameRate','dpDeckRate','dpFasciaRate','dpRailRate','dpStepRate','dpHelperRate','dpHoursDay'];
+ const data={}; ids.forEach(id=>data[id]=document.getElementById(id).value);
+ localStorage.setItem('deckProfitRatesV20',JSON.stringify(data)); alert('Rates saved on this device.');
+}
+function loadDeckProfitDefaults(){
+ try{const data=JSON.parse(localStorage.getItem('deckProfitRatesV20')||'{}');Object.entries(data).forEach(([id,v])=>{if(document.getElementById(id))document.getElementById(id).value=v})}catch(e){}
+ calcDeckProfit();
+}
+function resetDeckProfit(){
+ ['dpLength','dpWidth','dpFootings','dpFasciaLf','dpRailLf','dpSteps','dpHelpers','dpDays'].forEach(id=>document.getElementById(id).value=0);
+ calcDeckProfit();
+}
+document.addEventListener('DOMContentLoaded',loadDeckProfitDefaults);
+
+
+function apN(id){return parseFloat(document.getElementById(id)?.value)||0}
+function calcActualProfit(){
+ const revenue=Math.max(0,apN('apRevenue')), est=apN('apEstimatedProfit');
+ const costs=Math.max(0,apN('apCrewCost'))+Math.max(0,apN('apMaterials'))+Math.max(0,apN('apTravel'))+Math.max(0,apN('apOther'));
+ const actual=revenue-costs, diff=actual-est;
+ const margin=revenue>0?actual/revenue*100:0;
+ const perDay=apN('apActualDays')>0?actual/apN('apActualDays'):0;
+ const perHour=apN('apOwnerHours')>0?actual/apN('apOwnerHours'):0;
+ document.getElementById('apEstOut').textContent=dpMoney(est);
+ document.getElementById('apCostsOut').textContent=dpMoney(costs);
+ document.getElementById('apActualOut').textContent=dpMoney(actual);
+ document.getElementById('apDiffOut').textContent=(diff>=0?'+':'')+dpMoney(diff);
+ document.getElementById('apMarginOut').textContent=margin.toFixed(1)+'%';
+ document.getElementById('apDayOut').textContent=dpMoney(perDay);
+ document.getElementById('apHourOut').textContent=dpMoney(perHour);
+ const w=document.getElementById('apWarning');
+ if(!revenue&&!est){w.textContent='Enter project results to compare estimated and actual profit.';return}
+ if(diff<0){w.textContent='⚠ Project earned '+dpMoney(Math.abs(diff))+' less than estimated.'}
+ else if(diff>0){w.textContent='✓ Project earned '+dpMoney(diff)+' more than estimated.'}
+ else{w.textContent='Estimated and actual profit are equal.'}
+}
+function getActualProfitHistory(){try{return JSON.parse(localStorage.getItem('deckActualProfitV22')||'[]')}catch(e){return []}}
+function saveActualProfitRecord(){
+ const rec={id:Date.now(),project:document.getElementById('apProject').value||'Untitled Project',
+ revenue:apN('apRevenue'),estimatedProfit:apN('apEstimatedProfit'),estimatedDays:apN('apEstimatedDays'),
+ actualDays:apN('apActualDays'),ownerHours:apN('apOwnerHours'),crewCost:apN('apCrewCost'),
+ materials:apN('apMaterials'),travel:apN('apTravel'),other:apN('apOther'),date:new Date().toLocaleDateString()};
+ const a=getActualProfitHistory();a.unshift(rec);localStorage.setItem('deckActualProfitV22',JSON.stringify(a.slice(0,100)));
+ document.getElementById('apSaveMsg').textContent='Profit result saved successfully.';renderActualProfitHistory();
+}
+function renderActualProfitHistory(){
+ const el=document.getElementById('apHistory');if(!el)return;const a=getActualProfitHistory();
+ if(!a.length){el.innerHTML='No saved results.';return}
+ el.innerHTML='<table><thead><tr><th>Project</th><th>Estimated</th><th>Actual</th><th>Difference</th></tr></thead><tbody>'+
+ a.map(r=>{const costs=r.crewCost+r.materials+r.travel+r.other,actual=r.revenue-costs,diff=actual-r.estimatedProfit;
+ return '<tr><td>'+String(r.project).replace(/[<>&"]/g,'')+'<div class="small">'+r.date+'</div></td><td>'+dpMoney(r.estimatedProfit)+'</td><td>'+dpMoney(actual)+'</td><td class="'+(diff>=0?'good':'bad')+'">'+(diff>=0?'+':'')+dpMoney(diff)+'</td></tr>'}).join('')+'</tbody></table>';
+}
+function resetActualProfit(){
+ ['apProject','apRevenue','apEstimatedProfit','apEstimatedDays','apActualDays','apOwnerHours','apCrewCost','apMaterials','apTravel','apOther'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=id==='apProject'?'':'0'});
+ document.getElementById('apSaveMsg').textContent='';calcActualProfit();
+}
+document.addEventListener('DOMContentLoaded',()=>{calcActualProfit();renderActualProfitHistory()});
+
+
+function toggleMoreMenu(e){if(e)e.stopPropagation();document.getElementById('moreMenu')?.classList.toggle('hidden')}
+function openMorePage(page){document.getElementById('moreMenu')?.classList.add('hidden');showPage(page,null)}
+document.addEventListener('click',()=>document.getElementById('moreMenu')?.classList.add('hidden'));
+
+
+function enc(v){return encodeURIComponent(v||'')}
+function sendFeedbackEmail(){
+ const name=document.getElementById('fbName').value;
+ const like=document.getElementById('fbLike').value;
+ const confusing=document.getElementById('fbConfusing').value;
+ const missing=document.getElementById('fbMissing').value;
+ const bug=document.getElementById('fbBug').value;
+ const use=document.getElementById('fbUse').value;
+ const body=
+ 'Deck Builder Pro Feedback\n\n'+
+ 'Name: '+name+'\n\n'+
+ 'What do you like?\n'+like+'\n\n'+
+ 'What is confusing?\n'+confusing+'\n\n'+
+ 'What is missing?\n'+missing+'\n\n'+
+ 'Bug or problem?\n'+bug+'\n\n'+
+ 'Would you use this for your business? '+use+'\n\n'+
+ 'Version: v26';
+ window.location.href='mailto:contact@lukasdecks.com?subject='+enc('Deck Builder Pro Feedback')+'&body='+enc(body);
+ const msg=document.getElementById('fbMsg'); if(msg) msg.textContent='Your email app should open with the feedback ready to send.';
+}
+function clearFeedbackForm(){
+ ['fbName','fbLike','fbConfusing','fbMissing','fbBug'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+ const msg=document.getElementById('fbMsg'); if(msg) msg.textContent='';
+}
+
+
+function openFeedbackForm(){
+  document.getElementById('moreMenu')?.classList.add('hidden');
+  window.open('https://forms.gle/EhVc1qXribqDRm7bA', '_blank', 'noopener,noreferrer');
+}
+
 </script>
 </body></html>

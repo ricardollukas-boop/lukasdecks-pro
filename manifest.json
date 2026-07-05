@@ -1,1 +1,14 @@
-{"name":"LukasDecks Pro","short_name":"LukasDecks","description":"Estimate, invoice and profit calculator for deck builders.","start_url":"./index.html","scope":"./","display":"standalone","background_color":"#f4f6f8","theme_color":"#1f2933","orientation":"portrait-primary","icons":[{"src":"icon.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "Deck Builder Pro v22",
+  "short_name": "Deck Builder Pro",
+  "description": "Estimate, invoice and profit calculator for deck builders.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f8",
+  "theme_color": "#1f2933",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src":"icon.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
