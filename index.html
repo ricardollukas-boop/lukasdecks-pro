@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1f2933">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>Deck Builder Pro v26</title>
+<title>Deck Builder Pro v27</title>
 <style>
 :root{--bg:#f4f6f8;--card:#fff;--ink:#16202a;--muted:#6b7785;--accent:#d97706;--dark:#1f2933;--line:#e5e7eb;--good:#15803d;--bad:#b91c1c}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
@@ -26,7 +26,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 
 .logo-preview{max-width:150px;max-height:80px;object-fit:contain;margin-top:8px;border-radius:8px}
 .doc-logo{max-width:150px;max-height:70px;object-fit:contain;margin-bottom:8px}
-.sharebar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.measure-help{display:block;margin-top:5px;font-size:11px;color:#6b7280}.fraction-input{font-variant-numeric:tabular-nums}
+.sharebar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 @media(max-width:600px){main{padding:0 10px 35px;margin-top:14px}.card{padding:14px;border-radius:13px}button{min-height:46px}.btnrow{display:grid;grid-template-columns:1fr}.tabs{grid-template-columns:repeat(2,1fr)}nav{position:static}header{position:static}.invoice-preview{padding:18px}}
 
 .more-wrap{position:relative;margin-left:auto;display:flex;align-items:stretch}.more-btn{margin:0;border-radius:0;background:#111827;color:#fff;padding:13px 16px}.more-menu{position:absolute;right:0;top:100%;min-width:210px;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 35px rgba(0,0,0,.16);overflow:hidden;z-index:20}.more-menu div{padding:13px 15px;border-bottom:1px solid var(--line);cursor:pointer}.more-menu div:last-child{border-bottom:0}.more-menu div:hover{background:#f8fafc}
@@ -35,7 +35,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 </style>
 </head>
 <body>
-<header><div class="brand"><b>Deck Builder Pro</b><span class="badge">v26</span></div></header>
+<header><div class="brand"><b>Deck Builder Pro</b><span class="badge">v27</span></div></header>
 <nav><div class="tabs">
 <div class="tab active" onclick="showPage('dashboard',this)">Dashboard</div>
 <div class="tab" onclick="showPage('estimate',this)">New Estimate</div>
@@ -64,10 +64,10 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 <section id="estimatePage" class="page hidden"><h1>New Estimate</h1><p class="sub">Price, labor, and remaining amount after helpers.</p>
 <div class="grid"><div class="card"><div class="fields">
 <div class="full"><label>Project</label><input id="project" placeholder="Ex: Deck Bridgewater"></div><div><label>Customer</label><input id="client" placeholder="Customer name"></div><div><label>Status</label><select id="status"><option>Estimate</option><option>Approved</option><option>In Progress</option><option>Completed</option><option>Paid</option></select></div>
-<div><label>Width (ft)</label><input id="width" type="number" value="0" placeholder="Ex: 21" step="0.01"></div><div><label>Length (ft)</label><input id="length" type="number" value="0" placeholder="Ex: 16" step="0.01"></div>
+<div><label>Width (ft)</label><input id="width" type="text" inputmode="text" value="0" placeholder="Ex: 21" placeholder="Ex: 5 ⅜ or 5.5"></div><div><label>Length (ft)</label><input id="length" type="text" inputmode="text" value="0" placeholder="Ex: 16" placeholder="Ex: 5 ⅜ or 5.5"></div>
 <div><label>Frame ($/sf)</label><input id="frameRate" type="number" value="0" placeholder="Ex: 5" step="0.01"></div><div><label>Decking ($/sf)</label><input id="deckRate" type="number" value="0" placeholder="Ex: 5.50" step="0.01"></div>
-<div><label>Fascia (LF)</label><input id="fascia" type="number" value="0" placeholder="Ex: 56" step="0.01"></div><div><label>Fascia ($/LF)</label><input id="fasciaRate" type="number" value="0" placeholder="Ex: 3" step="0.01"></div>
-<div><label>Railing (LF)</label><input id="railing" type="number" value="0" placeholder="Ex: 32" step="0.01"></div><div><label>Railing ($/LF)</label><input id="railingRate" type="number" value="0" placeholder="Ex: 80" step="0.01"></div>
+<div><label>Fascia (LF)</label><input id="fascia" type="text" inputmode="text" value="0" placeholder="Ex: 56"></div><div><label>Fascia ($/LF)</label><input id="fasciaRate" type="number" value="0" placeholder="Ex: 3" step="0.01"></div>
+<div><label>Railing (LF)</label><input id="railing" type="text" inputmode="text" value="0" placeholder="Ex: 32"></div><div><label>Railing ($/LF)</label><input id="railingRate" type="number" value="0" placeholder="Ex: 80" step="0.01"></div>
 <div><label>Steps</label><input id="steps" type="number" value="0" placeholder="Ex: 5" step="1"></div><div><label>Price/step</label><input id="stepRate" type="number" value="0" placeholder="Ex: 100" step="0.01"></div>
 <div><label>Footings</label><input id="footings" type="number" value="0" placeholder="Ex: 6" step="1"></div><div><label>Price/footing</label><input id="footingRate" type="number" value="0" placeholder="Ex: 100" step="0.01"></div>
 <div><label>Days</label><input id="days" type="number" value="0" placeholder="Ex: 4" step="0.5"></div><div><label>Hours/day</label><input id="hoursDay" type="number" value="0" placeholder="Ex: 10" step="0.5"></div>
@@ -94,15 +94,15 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 <h1>Deck Profit Calculator</h1><p class="sub">Calculate suggested labor price, crew cost, margin, and owner earnings.</p>
 <div class="grid">
 <div class="card"><h2>Deck & Scope</h2><div class="fields">
-<div><label>Length (ft)</label><input id="dpLength" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
-<div><label>Width (ft)</label><input id="dpWidth" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Length (ft)</label><input id="dpLength" type="text" inputmode="text" value="0" oninput="calcDeckProfit()" placeholder="Ex: 5 ⅜ or 5.5"></div>
+<div><label>Width (ft)</label><input id="dpWidth" type="text" inputmode="text" value="0" oninput="calcDeckProfit()" placeholder="Ex: 5 ⅜ or 5.5"></div>
 <div><label>Footings (each)</label><input id="dpFootings" type="number" min="0" value="0" oninput="calcDeckProfit()"></div>
 <div><label>Footing $ / each</label><input id="dpFootingRate" type="number" min="0" step="0.01" value="100" oninput="calcDeckProfit()"></div>
 <div><label>Frame $ / sq ft</label><input id="dpFrameRate" type="number" min="0" step="0.01" value="5" oninput="calcDeckProfit()"></div>
 <div><label>Decking $ / sq ft</label><input id="dpDeckRate" type="number" min="0" step="0.01" value="5.5" oninput="calcDeckProfit()"></div>
-<div><label>Fascia (linear ft)</label><input id="dpFasciaLf" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Fascia (linear ft)</label><input id="dpFasciaLf" type="text" inputmode="text" value="0" oninput="calcDeckProfit()"></div>
 <div><label>Fascia $ / linear ft</label><input id="dpFasciaRate" type="number" min="0" step="0.01" value="3" oninput="calcDeckProfit()"></div>
-<div><label>Railings (linear ft)</label><input id="dpRailLf" type="number" min="0" step="0.01" value="0" oninput="calcDeckProfit()"></div>
+<div><label>Railings (linear ft)</label><input id="dpRailLf" type="text" inputmode="text" value="0" oninput="calcDeckProfit()"></div>
 <div><label>Railing $ / linear ft</label><input id="dpRailRate" type="number" min="0" step="0.01" value="85" oninput="calcDeckProfit()"></div>
 <div><label>Stair steps</label><input id="dpSteps" type="number" min="0" value="0" oninput="calcDeckProfit()"></div>
 <div><label>Stairs $ / step</label><input id="dpStepRate" type="number" min="0" step="0.01" value="100" oninput="calcDeckProfit()"></div>
@@ -185,8 +185,8 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 </section>
 
 <section id="calculatorPage" class="page hidden"><h1>Calculator</h1><p class="sub">Quick tools for deck work and everyday calculations.</p><div class="grid"><div class="card"><h2>Regular Calculator</h2><input id="calcDisplay" readonly value="0" style="font-size:26px;text-align:right"><div class="calc-grid"><button class="secondary" onclick="cKey('7')">7</button><button class="secondary" onclick="cKey('8')">8</button><button class="secondary" onclick="cKey('9')">9</button><button class="secondary" onclick="cKey('/')">÷</button><button class="secondary" onclick="cKey('4')">4</button><button class="secondary" onclick="cKey('5')">5</button><button class="secondary" onclick="cKey('6')">6</button><button class="secondary" onclick="cKey('*')">×</button><button class="secondary" onclick="cKey('1')">1</button><button class="secondary" onclick="cKey('2')">2</button><button class="secondary" onclick="cKey('3')">3</button><button class="secondary" onclick="cKey('-')">−</button><button class="secondary" onclick="cKey('0')">0</button><button class="secondary" onclick="cKey('.')">.</button><button class="primary" onclick="cEquals()">=</button><button class="secondary" onclick="cKey('+')">+</button></div><button class="danger" onclick="cClear()">Clear</button></div>
-<div class="card"><h2>Deck Area</h2><div class="fields"><div><label>Width (ft)</label><input id="caWidth" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 12 ½" oninput="deckTools()"></div><div><label>Length (ft)</label><input id="caLength" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 16 ⅜" oninput="deckTools()"></div></div><div class="result"><span>Area</span><b id="caArea">0 sf</b></div><h2 style="margin-top:20px">Board Calculator</h2><div class="fields"><div><label>Deck width across boards (ft)</label><input id="cbWidth" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 21 ¼" oninput="deckTools()"></div><div><label>Board face width (in)</label><input id="cbBoard" class="fraction-input" type="text" inputmode="decimal" value="5 ½" placeholder="Ex: 5 ⅜ or 5.375" oninput="deckTools()"><small class="measure-help">Accepts fractions: ¼, ⅜, ½, ⅝, ¾, ⅞</small></div><div><label>Gap (in)</label><input id="cbGap" class="fraction-input" type="text" inputmode="decimal" value="3/16" placeholder="Ex: ¼ or 3/16" oninput="deckTools()"><small class="measure-help">Type ¼ directly — no need to know 0.25</small></div></div><div class="result"><span>Approx. boards</span><b id="cbCount">0</b></div><h2 style="margin-top:20px">Linear Feet</h2><div class="fields"><div><label>Quantity</label><input id="lfQty" type="number" oninput="deckTools()"></div><div><label>Length each (ft)</label><input id="lfLen" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 12 ½" oninput="deckTools()"></div></div><div class="result"><span>Total LF</span><b id="lfTotal">0</b></div></div>
-<div class="card"><h2>Railing Calculator</h2><div class="fields"><div><label>Total railing LF</label><input id="crLF" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 32 ⅜" oninput="deckTools()"></div><div><label>Section length (ft)</label><input id="crSection" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 6 ½" value="6" oninput="deckTools()"></div></div><div class="result"><span>Approx. sections</span><b id="crCount">0</b></div><h2 style="margin-top:20px">Stairs</h2><div class="fields"><div><label>Total rise (in)</label><input id="csRise" class="fraction-input" type="text" inputmode="decimal" placeholder="Ex: 42 ⅜" oninput="deckTools()"><small class="measure-help">Accepts mixed measures like 42 ⅜</small></div><div><label>Target riser (in)</label><input id="csRiser" class="fraction-input" type="text" inputmode="decimal" value="7 ½" placeholder="Ex: 7 ½" oninput="deckTools()"><small class="measure-help">Accepts fractions and decimals</small></div></div><div class="result"><span>Approx. risers</span><b id="csCount">0</b></div><h2 style="margin-top:20px">Profit / Helper Cost</h2><div class="fields"><div><label>Job price ($)</label><input id="cpPrice" type="number" step="0.01" oninput="deckTools()"></div><div><label>Other costs ($)</label><input id="cpCosts" type="number" step="0.01" oninput="deckTools()"></div><div><label>Days</label><input id="cpDays" type="number" step="0.5" oninput="deckTools()"></div><div><label>Hours/day</label><input id="cpHours" type="number" value="10" step="0.5" oninput="deckTools()"></div></div><div class="result"><span>Active helper cost</span><b id="cpHelper">$0</b></div><div class="result"><span>Remaining</span><b id="cpRemain">$0</b></div></div></div></section>
+<div class="card"><h2>Deck Area</h2><div class="fields"><div><label>Width (ft)</label><input id="caWidth" type="text" inputmode="text" oninput="deckTools()" placeholder="Ex: 5 ⅜ or 5.5"></div><div><label>Length (ft)</label><input id="caLength" type="text" inputmode="text" oninput="deckTools()" placeholder="Ex: 5 ⅜ or 5.5"></div></div><div class="result"><span>Area</span><b id="caArea">0 sf</b></div><h2 style="margin-top:20px">Board Calculator</h2><div class="fields"><div><label>Deck width across boards (ft)</label><input id="cbWidth" type="text" inputmode="text" oninput="deckTools()" placeholder="Ex: 5 ⅜ or 5.5"></div><div><label>Board face width (in)</label><input id="cbBoard" type="text" inputmode="text" value="5.5" oninput="deckTools()" placeholder="Ex: 5 ⅜ or 5.5"></div><div><label>Gap (in)</label><input id="cbGap" type="text" inputmode="text" value="0.1875" oninput="deckTools()" placeholder="Ex: ¼ or 3/16"></div></div><div class="result"><span>Approx. boards</span><b id="cbCount">0</b></div><h2 style="margin-top:20px">Linear Feet</h2><div class="fields"><div><label>Quantity</label><input id="lfQty" type="number" oninput="deckTools()"></div><div><label>Length each (ft)</label><input id="lfLen" type="text" inputmode="text" oninput="deckTools()" placeholder="Ex: 5 ⅜ or 5.5"></div></div><div class="result"><span>Total LF</span><b id="lfTotal">0</b></div></div>
+<div class="card"><h2>Railing Calculator</h2><div class="fields"><div><label>Total railing LF</label><input id="crLF" type="text" inputmode="text" oninput="deckTools()"></div><div><label>Section length (ft)</label><input id="crSection" type="text" inputmode="text" value="6" oninput="deckTools()"></div></div><div class="result"><span>Approx. sections</span><b id="crCount">0</b></div><h2 style="margin-top:20px">Stairs</h2><div class="fields"><div><label>Total rise (in)</label><input id="csRise" type="text" inputmode="text" oninput="deckTools()"></div><div><label>Target riser (in)</label><input id="csRiser" type="text" inputmode="text" value="7.5" oninput="deckTools()"></div></div><div class="result"><span>Approx. risers</span><b id="csCount">0</b></div><h2 style="margin-top:20px">Profit / Helper Cost</h2><div class="fields"><div><label>Job price ($)</label><input id="cpPrice" type="number" step="0.01" oninput="deckTools()"></div><div><label>Other costs ($)</label><input id="cpCosts" type="number" step="0.01" oninput="deckTools()"></div><div><label>Days</label><input id="cpDays" type="number" step="0.5" oninput="deckTools()"></div><div><label>Hours/day</label><input id="cpHours" type="number" value="10" step="0.5" oninput="deckTools()"></div></div><div class="result"><span>Active helper cost</span><b id="cpHelper">$0</b></div><div class="result"><span>Remaining</span><b id="cpRemain">$0</b></div></div></div></section>
 
 <section id="profilePage" class="page hidden"><h1>Company Profile</h1><p class="sub">Saved on this device and used on estimates and invoices.</p>
 <div class="card"><div class="fields">
@@ -204,17 +204,18 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px;bor
 <script>
 const $=id=>document.getElementById(id);
 function parseMeasure(v){
-  let s=String(v??"").trim().replace(/,/g,".").replace(/[″”]/g,'').replace(/[′’]/g," ");
+  let s=String(v??"").trim().replace(/,/g,".").replace(/[−–—]/g,"-");
   if(!s)return 0;
   const uni={"¼":1/4,"½":1/2,"¾":3/4,"⅛":1/8,"⅜":3/8,"⅝":5/8,"⅞":7/8,"⅓":1/3,"⅔":2/3};
-  let total=0;
-  for(const [ch,val] of Object.entries(uni)){if(s.includes(ch)){total+=val;s=s.replaceAll(ch," ")}}
-  s=s.replace(/(\d+)\s*[- ]\s*(\d+)\s*\/\s*(\d+)/g,(_,w,a,b)=>`${w} ${a}/${b}`);
-  for(const part of s.split(/\s+/).filter(Boolean)){
-    if(part.includes('/')){const [a,b]=part.split('/').map(Number);if(Number.isFinite(a)&&b)total+=a/b}
-    else {const x=Number(part);if(Number.isFinite(x))total+=x}
+  let u=0; for(const [ch,val] of Object.entries(uni)){if(s.includes(ch)){u+=val;s=s.replaceAll(ch,"");}}
+  s=s.trim();
+  let total=u;
+  const parts=s.split(/\s+/).filter(Boolean);
+  for(const part of parts){
+    if(/^[-+]?\d+\/\d+$/.test(part)){let [a,b]=part.split("/").map(Number);if(b)total+=a/b;}
+    else {let x=Number(part);if(Number.isFinite(x))total+=x;}
   }
-  return total;
+  return Number.isFinite(total)?total:0;
 }
 const n=id=>{let e=$(id);return e?parseMeasure(e.value):0}, money=v=>Number(v||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
 const getP=()=>JSON.parse(localStorage.getItem("ld_projects_v12")||localStorage.getItem("ld_projects_v11")||"[]"), setP=x=>localStorage.setItem("ld_projects_v12",JSON.stringify(x));
@@ -253,7 +254,7 @@ function renderInvoice(){applyProfileToDocs();let p=getP().find(x=>String(x.id)=
 function editProject(id){let p=getP().find(x=>x.id===id);if(!p)return;localStorage.setItem("ld_editing_project_v19",String(id));project.value=p.project||"";client.value=p.client||"";status.value=p.status||"Estimate";notes.value=p.notes||"";showPage('estimate',document.querySelector('.tab[onclick*="estimate"]')||document.querySelectorAll('.tab')[1]);calc();saveMsg.textContent="Editing saved project. Press Save Project to update."}
 function duplicateProject(id){let a=getP(),p=a.find(x=>x.id===id);if(!p)return;let copy={...p,id:Date.now(),project:(p.project||'Project')+' Copy',status:'Estimate',date:new Date().toLocaleDateString(),createdAt:new Date().toISOString()};a.unshift(copy);setP(a);renderAll()}
 function markPaid(id){let a=getP(),p=a.find(x=>x.id===id);if(!p)return;p.status='Paid';p.paidDate=new Date().toLocaleDateString();setP(a);renderAll()}
-function exportBackup(){let data={app:'Deck Builder Pro',version:'v26',exportedAt:new Date().toISOString(),projects:getP(),companies:getCompanies(),helpers:getHelpers(),profile:getProfile()};let link=document.createElement('a');link.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));link.download='deck-builder-backup-v26.json';link.click()}
+function exportBackup(){let data={app:'Deck Builder Pro',version:'v19',exportedAt:new Date().toISOString(),projects:getP(),companies:getCompanies(),helpers:getHelpers(),profile:getProfile()};let link=document.createElement('a');link.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));link.download='deck-builder-backup-v19.json';link.click()}
 function importBackup(e){let f=e.target.files&&e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(d.projects)setP(d.projects);if(d.companies)setCompanies(d.companies);if(d.helpers)setHelpers(d.helpers);if(d.profile)localStorage.setItem(PROFILE_KEY,JSON.stringify(d.profile));alert('Backup imported successfully.');loadProfile();renderAll()}catch(err){alert('Invalid backup file.')}};r.readAsText(f);e.target.value=''}
 function delP(id){setP(getP().filter(p=>p.id!==id));renderAll()}function clearAll(){if(confirm("Delete all projects?")){setP([]);renderAll()}}
 function exportCSV(){let a=getP();if(!a.length)return alert("No project.");let rows=[["Project","Client","Status","Area","Total","Labor","Remaining","Hourly","Margin","Date"],...a.map(p=>[p.project,p.client,p.status,p.area,p.total,p.labor,p.profit,p.hourly,p.margin,p.date])],csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n"),link=document.createElement("a");link.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));link.download="deck_builder_projects.csv";link.click()}
@@ -415,7 +416,7 @@ function sendFeedbackEmail(){
  'What is missing?\n'+missing+'\n\n'+
  'Bug or problem?\n'+bug+'\n\n'+
  'Would you use this for your business? '+use+'\n\n'+
- 'Version: v26';
+ 'Version: v24';
  window.location.href='mailto:contact@lukasdecks.com?subject='+enc('Deck Builder Pro Feedback')+'&body='+enc(body);
  const msg=document.getElementById('fbMsg'); if(msg) msg.textContent='Your email app should open with the feedback ready to send.';
 }
